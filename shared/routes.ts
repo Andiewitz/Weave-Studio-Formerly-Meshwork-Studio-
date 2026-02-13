@@ -66,6 +66,31 @@ export const api = {
         401: errorSchemas.unauthorized
       },
     },
+    getCanvas: {
+      method: 'GET' as const,
+      path: '/api/workspaces/:id/canvas' as const,
+      responses: {
+        200: z.object({
+          nodes: z.array(z.any()),
+          edges: z.array(z.any()),
+        }),
+        404: errorSchemas.notFound,
+        401: errorSchemas.unauthorized
+      },
+    },
+    syncCanvas: {
+      method: 'POST' as const,
+      path: '/api/workspaces/:id/canvas' as const,
+      input: z.object({
+        nodes: z.array(z.any()),
+        edges: z.array(z.any()),
+      }),
+      responses: {
+        200: z.object({ success: z.boolean() }),
+        404: errorSchemas.notFound,
+        401: errorSchemas.unauthorized
+      },
+    },
   },
 };
 

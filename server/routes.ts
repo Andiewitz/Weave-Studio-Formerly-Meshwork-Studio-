@@ -30,7 +30,7 @@ export async function registerRoutes(
     // Check ownership
     const userId = (req.user as any).claims.sub;
     if (workspace.userId !== userId) {
-        return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({ message: "Unauthorized" });
     }
     res.json(workspace);
   });
@@ -39,7 +39,7 @@ export async function registerRoutes(
     try {
       const input = api.workspaces.create.input.parse(req.body);
       const userId = (req.user as any).claims.sub;
-      
+
       const workspace = await storage.createWorkspace({
         ...input,
         userId: userId
@@ -61,7 +61,7 @@ export async function registerRoutes(
       const id = Number(req.params.id);
       const existing = await storage.getWorkspace(id);
       if (!existing) return res.status(404).json({ message: "Not found" });
-      
+
       const userId = (req.user as any).claims.sub;
       if (existing.userId !== userId) return res.status(401).json({ message: "Unauthorized" });
 
@@ -69,13 +69,13 @@ export async function registerRoutes(
       const updated = await storage.updateWorkspace(id, input);
       res.json(updated);
     } catch (err) {
-        if (err instanceof z.ZodError) {
-            return res.status(400).json({
-              message: err.errors[0].message,
-              field: err.errors[0].path.join('.'),
-            });
-          }
-          throw err;
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({
+          message: err.errors[0].message,
+          field: err.errors[0].path.join('.'),
+        });
+      }
+      throw err;
     }
   });
 
@@ -83,7 +83,7 @@ export async function registerRoutes(
     const id = Number(req.params.id);
     const existing = await storage.getWorkspace(id);
     if (!existing) return res.status(404).json({ message: "Not found" });
-    
+
     const userId = (req.user as any).claims.sub;
     if (existing.userId !== userId) return res.status(401).json({ message: "Unauthorized" });
 
@@ -91,10 +91,32 @@ export async function registerRoutes(
     res.status(204).send();
   });
 
-  // Seed data function (can be called manually or on startup if needed, 
-  // but for auth-based apps, we typically wait for a user to log in)
-  // We can't easily seed user-specific data without a user ID. 
-  // We'll rely on the user creating data or seed some for the first user logic if complex.
+  // Canvas routes
+  app.get(api.workspaces.getCanvas.path, isAuthenticated, async (req, res) => {
+    const id = Number(req.params.id);
+    const workspace = await storage.getWorkspace(id);
+    if (!workspace) return res.status(404).json({ message: "Not found" });
+
+    const userId = (req.user as any).claims.sub;
+    if (workspace.userId !== userId) return res.status(401).json({ message: "Unauthorized" });
+
+    const nodes = await storage.getNodes(id);
+    const edges = await storage.getEdges(id);
+    res.json({ nodes, edges });
+  });
+
+  app.post(api.workspaces.syncCanvas.path, isAuthenticated, async (req, res) => {
+    const id = Number(req.params.id);
+    const workspace = await storage.getWorkspace(id);
+    if (!workspace) return res.status(404).json({ message: "Not found" });
+
+    const userId = (req.user as any).claims.sub;
+    if (workspace.userId !== userId) return res.status(401).json({ message: "Unauthorized" });
+
+    const { nodes: newNodes, edges: newEdges } = api.workspaces.syncCanvas.input.parse(req.body);
+    await storage.syncCanvas(id, newNodes, newEdges);
+    res.json({ success: true });
+  });
 
   return httpServer;
 }

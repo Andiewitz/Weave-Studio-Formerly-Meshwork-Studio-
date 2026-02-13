@@ -6,7 +6,7 @@ import { FeaturedCard } from "@/components/workspace/FeaturedCard";
 import { WorkspaceCard } from "@/components/workspace/WorkspaceCard";
 import { CreateWorkspaceDialog } from "@/components/workspace/CreateWorkspaceDialog";
 import { Button } from "@/components/ui/button";
-import { Plus, Upload, ArrowRight, Loader2, Sparkles } from "lucide-react";
+import { Plus, Upload, ArrowRight, Loader2, Sparkles, Search } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 
@@ -57,7 +57,7 @@ export default function Home() {
           <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
             <Search className="h-5 w-5 text-black" />
           </div>
-          <input 
+          <input
             type="text"
             placeholder=""
             className="w-full h-16 pl-14 pr-6 bg-white border-[3px] border-black rounded-full shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] focus:outline-none text-xl font-medium"
@@ -75,8 +75,8 @@ export default function Home() {
           {/* Left Side: Featured and Actions */}
           <div className="space-y-8">
             {mostRecent ? (
-              <FeaturedCard 
-                title={mostRecent.title} 
+              <FeaturedCard
+                title={mostRecent.title}
                 type={mostRecent.type}
                 onContinue={() => console.log("Continue", mostRecent.id)}
               />
@@ -88,14 +88,14 @@ export default function Home() {
 
             {/* Action Buttons Row */}
             <div className="flex flex-wrap items-center gap-4">
-              <Button 
+              <Button
                 onClick={() => setIsCreateOpen(true)}
                 className="h-14 px-8 bg-[#0047FF] text-white border-[3px] border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:bg-[#0047FF] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all font-bold text-lg"
               >
                 + New Workspace
               </Button>
 
-              <Button 
+              <Button
                 className="h-14 px-8 bg-[#D946EF] text-white border-[3px] border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:bg-[#D946EF] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all font-bold text-lg"
               >
                 + Import Project
@@ -117,9 +117,9 @@ export default function Home() {
 
             <div className="rounded-[2.5rem] border-[3px] border-black p-6 space-y-4">
               {workspaces?.map((workspace) => (
-                <WorkspaceCard 
-                  key={workspace.id} 
-                  workspace={workspace} 
+                <WorkspaceCard
+                  key={workspace.id}
+                  workspace={workspace}
                   onDelete={handleDelete}
                   onEdit={handleEdit}
                 />
@@ -132,9 +132,9 @@ export default function Home() {
         </div>
       </div>
 
-      <CreateWorkspaceDialog 
-        open={isCreateOpen} 
-        onOpenChange={setIsCreateOpen} 
+      <CreateWorkspaceDialog
+        open={isCreateOpen}
+        onOpenChange={setIsCreateOpen}
       />
     </DashboardLayout>
   );

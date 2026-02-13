@@ -31,4 +31,33 @@ class AuthStorage implements IAuthStorage {
   }
 }
 
-export const authStorage = new AuthStorage();
+class MemAuthStorage implements IAuthStorage {
+  private users: Map<string, User>;
+
+  constructor() {
+    this.users = new Map();
+  }
+
+  async getUser(id: string): Promise<User | undefined> {
+    return this.users.get(id);
+  }
+
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    if (!userData.id) throw new Error("User ID is required");
+    const now = new Date();
+    const existing = this.users.get(userData.id!);
+    const user: User = {
+      ...userData,
+      createdAt: existing?.createdAt ?? now, // Keep existing createdAt if present
+      updatedAt: now, // Always update updatedAt
+    } as User;
+
+    // Ensure all mandatory fields from User interface are present if they are not in UpsertUser
+    // Assuming User extends UpsertUser plus createdAt, updatedAt
+
+    this.users.set(userData.id!, user);
+    return user;
+  }
+}
+
+export const authStorage = process.env.DATABASE_URL ? new AuthStorage() : new MemAuthStorage();

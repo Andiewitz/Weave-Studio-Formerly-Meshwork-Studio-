@@ -15,7 +15,7 @@ export default function Landing() {
             </div>
             <span className="text-xl font-bold font-serif">Nexus</span>
           </div>
-          
+
           <div className="hidden md:flex items-center gap-8">
             <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Features</a>
             <a href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Pricing</a>
@@ -45,17 +45,17 @@ export default function Landing() {
               Now in Public Beta v2.0
             </span>
             <h1 className="text-5xl md:text-7xl font-serif font-bold leading-[1.1] mb-6">
-              Organize your <br/>
+              Organize your <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">digital chaos.</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-lg mb-8 leading-relaxed">
-              Nexus provides a unified workspace for your teams, projects, and ideas. 
+              Nexus provides a unified workspace for your teams, projects, and ideas.
               Stop switching apps and start focusing on what matters.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="rounded-full h-14 px-8 text-lg" asChild>
-                <a href="/api/login">
+                <a href="/auth">
                   Start for Free
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </a>
@@ -105,9 +105,9 @@ export default function Landing() {
                 ))}
               </div>
             </div>
-            
+
             {/* Floating Elements */}
-            <motion.div 
+            <motion.div
               animate={{ y: [0, -20, 0] }}
               transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
               className="absolute top-10 right-10 p-4 bg-white rounded-2xl shadow-xl flex items-center gap-3 z-20"
@@ -121,7 +121,7 @@ export default function Landing() {
               </div>
             </motion.div>
           </div>
-          
+
           {/* Background Glow */}
           <div className="absolute -inset-4 bg-gradient-to-r from-primary to-blue-600 opacity-20 blur-3xl -z-10 rounded-full" />
         </motion.div>

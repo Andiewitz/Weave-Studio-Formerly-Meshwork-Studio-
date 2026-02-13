@@ -1,13 +1,14 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
-import { 
-  LayoutDashboard, 
-  FolderOpen, 
-  Settings, 
-  Search, 
-  Bell, 
+import {
+  LayoutDashboard,
+  FolderOpen,
+  Settings,
+  Search,
+  Bell,
   Menu,
   LogOut,
+  Sparkles,
   User as UserIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -45,15 +46,15 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           +
         </div>
       </div>
-      
+
       <nav className="flex-1 px-4 space-y-4 mt-4">
         {navItems.map((item) => {
           const isActive = location === item.href;
           return (
             <Link key={item.href} href={item.href} className={`
               flex items-center justify-center w-12 h-12 mx-auto rounded-xl transition-all duration-200 group
-              ${isActive 
-                ? "text-black" 
+              ${isActive
+                ? "text-black"
                 : "text-black/40 hover:text-black"
               }
             `}>

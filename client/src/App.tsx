@@ -8,6 +8,8 @@ import { Loader2 } from "lucide-react";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Landing from "@/pages/Landing";
+import AuthPage from "@/pages/AuthPage";
+import Workspace from "@/pages/Workspace";
 
 function ProtectedRoute({ component: Component, ...rest }: { component: React.ComponentType<any> }) {
   const { user, isLoading } = useAuth();
@@ -21,7 +23,7 @@ function ProtectedRoute({ component: Component, ...rest }: { component: React.Co
   }
 
   if (!user) {
-    return <Landing />;
+    return <Redirect to="/auth" />;
   }
 
   return <Component />;
@@ -31,7 +33,9 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={() => <ProtectedRoute component={Home} />} />
+      <Route path="/auth" component={AuthPage} />
       <Route path="/workspaces" component={() => <ProtectedRoute component={Home} />} />
+      <Route path="/workspace/:id" component={() => <ProtectedRoute component={Workspace} />} />
       {/* Settings would go here */}
       <Route component={NotFound} />
     </Switch>

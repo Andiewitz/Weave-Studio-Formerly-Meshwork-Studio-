@@ -6,6 +6,7 @@ import session from "express-session";
 import type { Express, RequestHandler } from "express";
 import memoize from "memoizee";
 import connectPg from "connect-pg-simple";
+import memorystore from "memorystore";
 import { authStorage } from "./storage";
 
 const getOidcConfig = memoize(
@@ -20,6 +21,19 @@ const getOidcConfig = memoize(
 
 export function getSession() {
   const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
+  if (!process.env.DATABASE_URL) {
+    const MemoryStore = memorystore(session);
+    return session({
+      secret: process.env.SESSION_SECRET || "dev_secret",
+      resave: false,
+      saveUninitialized: false,
+      store: new MemoryStore({
+        checkPeriod: 86400000 // prune expired entries every 24h
+      }),
+      cookie: { secure: false }
+    });
+  }
+
   const pgStore = connectPg(session);
   const sessionStore = new pgStore({
     conString: process.env.DATABASE_URL,
@@ -34,7 +48,7 @@ export function getSession() {
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       maxAge: sessionTtl,
     },
   });
@@ -65,6 +79,42 @@ export async function setupAuth(app: Express) {
   app.use(getSession());
   app.use(passport.initialize());
   app.use(passport.session());
+
+  passport.serializeUser((user: Express.User, cb) => cb(null, user));
+  passport.deserializeUser((user: Express.User, cb) => cb(null, user));
+
+  if (process.env.REPL_ID === "local-development") {
+    app.get("/api/login", async (req, res) => {
+      console.log("Development Login Bypass hit");
+      const mockUser = {
+        claims: {
+          sub: "dev-user-id",
+          email: "dev@example.com",
+          first_name: "Development",
+          last_name: "User",
+          profile_image_url: "https://avatar.vercel.sh/dev",
+          exp: Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60,
+        },
+        expires_at: Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60,
+      };
+
+      await upsertUser(mockUser.claims);
+
+      req.login(mockUser, (err) => {
+        if (err) {
+          console.error("Mock Login Error:", err);
+          return res.status(500).send("Login failed: " + err.message);
+        }
+        res.redirect("/");
+      });
+    });
+
+    app.get("/api/callback", (req, res) => {
+      res.redirect("/");
+    });
+
+    return;
+  }
 
   const config = await getOidcConfig();
 
@@ -98,9 +148,6 @@ export async function setupAuth(app: Express) {
       registeredStrategies.add(strategyName);
     }
   };
-
-  passport.serializeUser((user: Express.User, cb) => cb(null, user));
-  passport.deserializeUser((user: Express.User, cb) => cb(null, user));
 
   app.get("/api/login", (req, res, next) => {
     ensureStrategy(req.hostname);
