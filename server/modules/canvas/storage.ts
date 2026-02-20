@@ -76,7 +76,7 @@ export class CanvasDatabaseStorage implements ICanvasStorage {
     }
 
     async deleteWorkspace(id: number): Promise<void> {
-        await db.transaction(async (tx) => {
+        await db.transaction(async (tx: any) => {
             await tx.delete(edges).where(eq(edges.workspaceId, id));
             await tx.delete(nodes).where(eq(nodes.workspaceId, id));
             await tx.delete(workspaces).where(eq(workspaces.id, id));
@@ -92,7 +92,7 @@ export class CanvasDatabaseStorage implements ICanvasStorage {
     }
 
     async syncCanvas(workspaceId: number, newNodes: InsertNode[], newEdges: InsertEdge[]): Promise<void> {
-        await db.transaction(async (tx) => {
+        await db.transaction(async (tx: any) => {
             await tx.delete(edges).where(eq(edges.workspaceId, workspaceId));
             await tx.delete(nodes).where(eq(nodes.workspaceId, workspaceId));
             if (newNodes.length > 0) {

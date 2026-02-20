@@ -11,9 +11,9 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold font-serif">N</span>
+              <span className="text-primary-foreground font-bold font-serif">W</span>
             </div>
-            <span className="text-xl font-bold font-serif">Nexus</span>
+            <span className="text-xl font-bold font-serif">Weaving Studio</span>
           </div>
 
           <div className="hidden md:flex items-center gap-8">
@@ -44,12 +44,12 @@ export default function Landing() {
             <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary font-medium text-sm mb-4">
               Now in Public Beta v2.0
             </span>
-            <h1 className="text-5xl md:text-7xl font-serif font-bold leading-[1.1] mb-6">
+            <h1 className="text-5xl md:text-7xl font-bold leading-[1.1] mb-6 tracking-tight">
               Organize your <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">digital chaos.</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-lg mb-8 leading-relaxed">
-              Nexus provides a unified workspace for your teams, projects, and ideas.
+              Weaving Studio provides a unified workspace for your teams, projects, and ideas.
               Stop switching apps and start focusing on what matters.
             </p>
 
@@ -134,7 +134,7 @@ export default function Landing() {
           <div className="flex flex-wrap justify-center gap-12 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
             {/* Logos represented as text for simplicity, replace with SVGs in real app */}
             {["Acme Corp", "GlobalTech", "Nebula", "FocusGroup", "Circle"].map((brand) => (
-              <span key={brand} className="text-xl font-bold font-serif">{brand}</span>
+              <span key={brand} className="text-xl font-bold">{brand}</span>
             ))}
           </div>
         </div>

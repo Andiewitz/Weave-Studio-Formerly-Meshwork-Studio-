@@ -5,12 +5,12 @@ import { z } from "zod";
 import { insertWorkspaceSchema } from "@shared/schema";
 import { useCreateWorkspace } from "@/hooks/use-workspaces";
 import { useAuth } from "@/hooks/use-auth";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogHeader, 
-  DialogTitle, 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
   DialogFooter
 } from "@/components/ui/dialog";
 import {
@@ -49,7 +49,7 @@ export function CreateWorkspaceDialog({ open, onOpenChange }: CreateWorkspaceDia
   const { user } = useAuth();
   const { toast } = useToast();
   const createWorkspace = useCreateWorkspace();
-  
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -60,7 +60,7 @@ export function CreateWorkspaceDialog({ open, onOpenChange }: CreateWorkspaceDia
 
   const onSubmit = (values: FormValues) => {
     if (!user) return;
-    
+
     createWorkspace.mutate(
       { ...values, userId: user.id },
       {
@@ -87,7 +87,7 @@ export function CreateWorkspaceDialog({ open, onOpenChange }: CreateWorkspaceDia
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="font-serif text-2xl">Create Workspace</DialogTitle>
+          <DialogTitle className="text-2xl font-bold tracking-tight">Create Workspace</DialogTitle>
           <DialogDescription>
             Add a new workspace to organize your projects.
           </DialogDescription>

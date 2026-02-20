@@ -1,5 +1,5 @@
 import type { Express } from "express";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupAuth, isAuthenticated } from "./authCore";
 import { registerAuthRoutes } from "./routes";
 import { authStorage } from "./storage";
 
@@ -14,6 +14,6 @@ export class AuthModule {
     static middleware = { isAuthenticated };
 }
 
-export * from "./replitAuth";
+export * from "./authCore";
 export * from "./routes";
 export * from "./storage";

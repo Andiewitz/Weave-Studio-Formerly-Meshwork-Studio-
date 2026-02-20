@@ -1,16 +1,49 @@
-version: '3.8'
+name: emnesh-studio
+
 services:
-  db:
-    image: postgres:15
+  emnesh-db:
+    container_name: emnesh-postgres-canvas
+    image: postgres:15-alpine
     restart: always
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: emnesh
+      POSTGRES_DB: emnesh_canvas
     ports:
       - '5432:5432'
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata_canvas:/var/lib/postgresql/data
+
+  emnesh-auth-db:
+    container_name: emnesh-postgres-auth
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: emnesh_auth
+    ports:
+      - '5433:5432'
+    volumes:
+      - pgdata_auth:/var/lib/postgresql/data
+
+  emnesh-app:
+    container_name: emnesh-main-app
+    image: emnesh-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - '5000:5000'
+    environment:
+      DATABASE_URL: postgresql://user:password@emnesh-db:5432/emnesh_canvas
+      AUTH_DATABASE_URL: postgresql://user:password@emnesh-auth-db:5432/emnesh_auth
+      NODE_ENV: production
+    depends_on:
+      - emnesh-db
+      - emnesh-auth-db
 
 volumes:
-  pgdata:
+  pgdata_canvas:
+  pgdata_auth:

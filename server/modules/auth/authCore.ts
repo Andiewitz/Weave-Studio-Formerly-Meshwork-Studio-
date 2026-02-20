@@ -12,8 +12,8 @@ import { authStorage } from "./storage";
 const getOidcConfig = memoize(
   async () => {
     return await client.discovery(
-      new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc"),
-      process.env.REPL_ID!
+      new URL(process.env.ISSUER_URL ?? "https://weaving.studio/oidc"),
+      process.env.CLIENT_ID || "studio-dev"
     );
   },
   { maxAge: 3600 * 1000 }
@@ -21,7 +21,9 @@ const getOidcConfig = memoize(
 
 export function getSession() {
   const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
-  if (!process.env.DATABASE_URL) {
+  const connectionString = process.env.AUTH_DATABASE_URL || process.env.DATABASE_URL;
+
+  if (!connectionString) {
     const MemoryStore = memorystore(session);
     return session({
       secret: process.env.SESSION_SECRET || "dev_secret",
@@ -36,7 +38,7 @@ export function getSession() {
 
   const pgStore = connectPg(session);
   const sessionStore = new pgStore({
-    conString: process.env.DATABASE_URL,
+    conString: connectionString,
     createTableIfMissing: false,
     ttl: sessionTtl,
     tableName: "sessions",
@@ -83,7 +85,7 @@ export async function setupAuth(app: Express) {
   passport.serializeUser((user: Express.User, cb) => cb(null, user));
   passport.deserializeUser((user: Express.User, cb) => cb(null, user));
 
-  if (process.env.REPL_ID === "local-development") {
+  if (process.env.CLIENT_ID === "local-development") {
     app.get("/api/login", async (req, res) => {
       console.log("Development Login Bypass hit");
       const mockUser = {
@@ -133,7 +135,7 @@ export async function setupAuth(app: Express) {
 
   // Helper function to ensure strategy exists for a domain
   const ensureStrategy = (domain: string) => {
-    const strategyName = `replitauth:${domain}`;
+    const strategyName = `studioauth:${domain}`;
     if (!registeredStrategies.has(strategyName)) {
       const strategy = new Strategy(
         {
@@ -151,7 +153,7 @@ export async function setupAuth(app: Express) {
 
   app.get("/api/login", (req, res, next) => {
     ensureStrategy(req.hostname);
-    passport.authenticate(`replitauth:${req.hostname}`, {
+    passport.authenticate(`studioauth:${req.hostname}`, {
       prompt: "login consent",
       scope: ["openid", "email", "profile", "offline_access"],
     })(req, res, next);
@@ -159,7 +161,7 @@ export async function setupAuth(app: Express) {
 
   app.get("/api/callback", (req, res, next) => {
     ensureStrategy(req.hostname);
-    passport.authenticate(`replitauth:${req.hostname}`, {
+    passport.authenticate(`studioauth:${req.hostname}`, {
       successReturnToOrRedirect: "/",
       failureRedirect: "/api/login",
     })(req, res, next);
@@ -169,7 +171,7 @@ export async function setupAuth(app: Express) {
     req.logout(() => {
       res.redirect(
         client.buildEndSessionUrl(config, {
-          client_id: process.env.REPL_ID!,
+          client_id: process.env.CLIENT_ID || "studio-dev",
           post_logout_redirect_uri: `${req.protocol}://${req.hostname}`,
         }).href
       );

@@ -9,7 +9,7 @@ export const collections = pgTable("collections", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
   description: text("description"),
-  userId: text("user_id").references(() => users.id),
+  userId: text("user_id"), // Decoupled from users table for multi-db support
   parentId: integer("parent_id"), // for nested collections
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -18,7 +18,7 @@ export const workspaces = pgTable("workspaces", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
   type: text("type").notNull().default("system"), // system, architecture, app, presentation
-  userId: text("user_id").references(() => users.id),
+  userId: text("user_id"), // Decoupled from users table for multi-db support
   collectionId: integer("collection_id").references(() => collections.id),
   createdAt: timestamp("created_at").defaultNow(),
 });
