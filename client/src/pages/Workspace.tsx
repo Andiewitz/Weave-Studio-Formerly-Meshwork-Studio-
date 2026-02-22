@@ -23,8 +23,10 @@ import {
 
 import '@xyflow/react/dist/style.css';
 import { useCanvas } from '@/hooks/use-canvas';
+import { useWorkspace } from '@/hooks/use-workspaces';
 import { useParams, Link } from 'wouter';
 import {
+    Download,
     Save,
     Loader2,
     Play,
@@ -250,6 +252,7 @@ function WorkspaceView() {
     const { id } = useParams();
     const workspaceId = Number(id);
     const { data: canvasData, isLoading, sync, isSyncing } = useCanvas(workspaceId);
+    const { data: workspace } = useWorkspace(workspaceId);
     const { user } = useAuth();
     const { toast } = useToast();
     const { screenToFlowPosition } = useReactFlow();
@@ -861,14 +864,13 @@ function WorkspaceView() {
                     <div className="h-4 w-px mx-1 bg-white/10" />
                     <div className="flex items-center gap-2">
                         <Box className="w-5 h-5 text-white" />
-                        <span className="font-sans font-black text-lg uppercase tracking-widest text-white/90">Weave Studio</span>
+                        <span className="font-sans font-black text-lg uppercase tracking-widest text-white/90">{workspace?.title || 'Untitled Project'}</span>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <button onClick={handleSave} disabled={isSyncing} className="flex items-center gap-2 px-3 py-1.5 rounded-md border transition-all font-medium text-xs border-white/10 hover:bg-white/5 text-white/80">
-                        {isSyncing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
-                        Save Architecture
+                    <button onClick={handleSave} disabled={isSyncing} className="flex items-center justify-center w-8 h-8 rounded-md border transition-all border-white/10 hover:bg-white/5 text-white/80" title="Save / Download">
+                        {isSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                     </button>
                     <div className="h-4 w-px mx-1 bg-white/10" />
                     <Avatar className="w-7 h-7 ring-1 ring-white/10">
@@ -1211,7 +1213,7 @@ function WorkspaceView() {
                                             className="w-full flex items-center gap-2 px-3 py-2 text-[12px] transition-colors hover:bg-white/5 text-white/70 hover:text-white"
                                         >
                                             <Edit2 className="w-3.5 h-3.5" />
-                                            Rename Layer
+                                            Rename Component
                                         </button>
                                         <button
                                             onClick={() => duplicateNode(layerMenu.id)}
@@ -1226,7 +1228,7 @@ function WorkspaceView() {
                                             className="w-full flex items-center gap-2 px-3 py-2 text-[12px] hover:bg-red-500/10 transition-colors text-red-400 hover:text-red-300"
                                         >
                                             <Trash2 className="w-3.5 h-3.5" />
-                                            Delete Layer
+                                            Delete Component
                                         </button>
                                     </div>
                                 )}
@@ -1364,7 +1366,7 @@ function WorkspaceView() {
                                     onClick={() => setActiveTab('layers')}
                                     className={`flex-1 h-10 text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'layers' ? 'text-white border-b-2 border-white' : 'text-white/20 hover:text-white/40'}`}
                                 >
-                                    Layers
+                                    Components
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('properties')}
@@ -1393,7 +1395,7 @@ function WorkspaceView() {
                                             </div>
                                         )) : (
                                             <div className="py-20 text-center">
-                                                <p className="text-[10px] uppercase tracking-widest text-white/10 font-bold">No Layers Yet</p>
+                                                <p className="text-[10px] uppercase tracking-widest text-white/10 font-bold">No Components Yet</p>
                                             </div>
                                         )}
                                     </div>
