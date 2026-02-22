@@ -922,17 +922,15 @@ function WorkspaceView() {
 
                                         // Auto-expand if searching, otherwise use state
                                         const isExpanded = searchTerm !== '' ? true : (expandedCategories[category] === true);
-                                        const isK8s = category === 'Kubernetes';
-                                        const isTemplate = category === 'Templates';
 
                                         return (
-                                            <section key={category} className={`border-b border-white/[0.03] ${isK8s ? 'bg-blue-500/5 border-blue-500/10' : ''} ${isTemplate ? 'bg-amber-500/5 border-amber-500/10' : ''}`}>
+                                            <section key={category} className="border-b border-white/[0.03]">
                                                 <button
                                                     onClick={() => toggleCategory(category)}
                                                     className="w-full h-10 flex items-center px-4 gap-2 transition-colors hover:bg-white/5 group"
                                                 >
-                                                    <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? '' : '-rotate-90'} ${isK8s ? 'text-blue-400' : isTemplate ? 'text-amber-400' : 'text-white/20'}`} />
-                                                    <span className={`text-[10px] font-bold uppercase tracking-widest ${isK8s ? 'text-blue-400 font-black' : isTemplate ? 'text-amber-400 font-black' : 'text-white/40'}`}>{category}</span>
+                                                    <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? '' : '-rotate-90'} text-white/20`} />
+                                                    <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">{category}</span>
                                                     <span className="ml-auto text-[9px] font-bold text-white/10">{categoryItems.length}</span>
                                                 </button>
 
@@ -951,7 +949,7 @@ function WorkspaceView() {
                                                                 }}
                                                                 onDragStart={(e) => onDragStart(e, item.type, item.label)}
                                                                 draggable
-                                                                className={`flex items-center gap-3 p-2 rounded-lg border border-transparent transition-all text-left group hover:bg-white/5 cursor-grab active:cursor-grabbing ${isTemplate ? 'bg-amber-500/5 border-amber-500/10 hover:bg-amber-500/10' : ''}`}
+                                                                className="flex items-center gap-3 p-2 rounded-lg border border-transparent transition-all text-left group hover:bg-white/5 cursor-grab active:cursor-grabbing"
                                                             >
                                                                 <div className="p-1.5 rounded-md transition-colors bg-white/5 text-white/60 group-hover:text-white group-hover:bg-white/10">
                                                                     <item.icon className="w-4 h-4" />
@@ -982,7 +980,8 @@ function WorkspaceView() {
                                     }
 
                                     return content;
-                                })()}
+                                })()
+                                }
                             </div>
                         </aside>
                     </ResizablePanel>

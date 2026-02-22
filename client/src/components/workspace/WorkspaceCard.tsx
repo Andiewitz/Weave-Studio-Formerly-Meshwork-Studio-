@@ -24,17 +24,17 @@ export function WorkspaceCard({ workspace, onDelete, onEdit }: WorkspaceCardProp
   return (
     <div
       onClick={() => setLocation(`/workspace/${workspace.id}`)}
-      className="brutal-card cursor-pointer flex items-center justify-between p-6 bg-card transition-all group hover:bg-black/5"
+      className="brutal-card cursor-pointer flex items-center justify-between p-4 bg-card transition-all group hover:bg-black/5"
     >
-      <div className="flex items-center gap-6">
-        <div className="w-14 h-14 border-2 border-foreground flex items-center justify-center bg-card transition-transform group-hover:-rotate-6 duration-300">
-          <Box className="w-8 h-8 text-foreground" />
+      <div className="flex items-center gap-4">
+        <div className="w-10 h-10 border-[1px] border-foreground flex items-center justify-center bg-card transition-transform group-hover:-rotate-6 duration-300">
+          <Box className="w-5 h-5 text-foreground" />
         </div>
-        <div className="flex flex-col gap-1">
-          <h3 className="font-black text-2xl uppercase tracking-tighter text-foreground group-hover:text-primary transition-colors">
+        <div className="flex flex-col">
+          <h3 className="font-black text-xl uppercase tracking-tighter text-foreground group-hover:text-primary transition-colors leading-tight">
             {workspace.title}
           </h3>
-          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground border-l-2 border-foreground pl-2 ml-1">
+          <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">
             {workspace.type || "Canvas"} — {format(new Date(), "MMM dd")}
           </span>
         </div>

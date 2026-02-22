@@ -66,9 +66,9 @@ export default function Home() {
 
   return (
     <DashboardLayout>
-      <div className="flex flex-col gap-16">
+      <div className="flex flex-col gap-10 pt-4">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 reveal-on-scroll">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 -ml-2">
             <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mix-blend-darken text-foreground leading-[0.85]">
               {isWorkspacesPage ? (
                 <>All<br />Projects</>
@@ -77,21 +77,8 @@ export default function Home() {
               )}
             </h1>
             <p className="mt-6 text-xl font-bold uppercase tracking-widest border-l-4 border-foreground pl-4 ml-2 max-w-md">
-              {isWorkspacesPage ? "Your complete portfolio of digital real estate." : "Continue pushing boundaries."}
+              {isWorkspacesPage ? "A complete blueprint of your infrastructure." : "Architecting the future, one node at a time."}
             </p>
-          </div>
-
-          <div className="relative w-full max-w-sm reveal-on-scroll delay-100">
-            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-foreground" />
-            </div>
-            <input
-              type="text"
-              placeholder="SEARCH PROJECTS..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full h-14 pl-12 pr-4 bg-card border-2 border-foreground shadow-[8px_8px_0px_0px_rgba(26,26,26,1)] focus:outline-none focus:shadow-[12px_12px_0px_0px_rgba(26,26,26,1)] transition-all font-bold uppercase tracking-widest text-sm"
-            />
           </div>
         </div>
 
@@ -134,13 +121,26 @@ export default function Home() {
             </div>
           )}
 
-          <div className={cn("space-y-8 reveal-on-scroll delay-300", isWorkspacesPage && "lg:col-span-2")}>
+          <div className={cn("space-y-6 reveal-on-scroll delay-300 -mt-32", isWorkspacesPage && "lg:col-span-2 mt-0")}>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b-2 border-foreground pb-4">
               <div className="flex items-center gap-8">
-                <h2 className="text-3xl font-bold uppercase tracking-wider">
+                <h2 className="text-2xl font-black uppercase tracking-wider">
                   {isWorkspacesPage ? "My Projects" : "Recent"}
                 </h2>
-                {!isWorkspacesPage && <h2 className="text-3xl font-bold uppercase tracking-wider text-muted-foreground opacity-50">Team</h2>}
+                {!isWorkspacesPage && <h2 className="text-2xl font-black text-muted-foreground uppercase tracking-wider">Team</h2>}
+              </div>
+
+              <div className="relative w-full max-w-[240px] reveal-on-scroll delay-100">
+                <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                  <Search className="h-4 w-4 text-foreground/40" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="SEARCH..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full h-10 pl-9 pr-4 bg-card border-2 border-foreground shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] focus:outline-none focus:shadow-[6px_6px_0px_0px_rgba(26,26,26,1)] transition-all font-bold uppercase tracking-widest text-[10px]"
+                />
               </div>
 
               {isWorkspacesPage && (
@@ -158,7 +158,7 @@ export default function Home() {
               )}
             </div>
 
-            <div className="brutal-card p-6 md:p-8 space-y-6 bg-card rotate-[0.5deg]">
+            <div className="grid grid-cols-1 gap-3">
               {filteredWorkspaces.map((workspace) => (
                 <WorkspaceCard
                   key={workspace.id}

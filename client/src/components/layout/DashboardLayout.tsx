@@ -75,7 +75,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         )}
       </div>
 
-      <nav className="flex-1 px-4 mt-4 overflow-y-auto">
+      <nav className="flex-1 px-4 mt-4 overflow-y-auto scrollbar-hide">
         <div className="space-y-2">
           {navItems.map((item) => {
             const isActive = location === item.href;
@@ -195,8 +195,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-6 md:p-12 overflow-y-auto">
-          <div className="max-w-6xl mx-auto space-y-12 relative z-20">
+        <main className="flex-1 p-6 md:p-12 overflow-y-auto scrollbar-hide">
+          <div className="max-w-[1400px] mx-auto space-y-12 relative z-20">
             {children}
           </div>
         </main>

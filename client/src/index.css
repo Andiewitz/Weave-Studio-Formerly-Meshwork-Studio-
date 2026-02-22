@@ -143,6 +143,17 @@
     white-space: nowrap;
     user-select: none;
   }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
 }
 
 /* React Flow NodeResizer – handles & lines sit OUTSIDE the node */
