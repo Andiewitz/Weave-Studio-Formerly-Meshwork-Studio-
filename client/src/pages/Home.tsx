@@ -66,31 +66,38 @@ export default function Home() {
 
   return (
     <DashboardLayout>
-      <div className="flex flex-col gap-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="flex flex-col gap-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 reveal-on-scroll">
           <div className="flex flex-col gap-2">
-            <h1 className="text-5xl font-sans font-bold text-black border-b-[4px] border-black w-fit pb-1">
-              {isWorkspacesPage ? "All Projects" : `Welcome back, ${user?.firstName || "Andrei"}`}
+            <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mix-blend-darken text-foreground leading-[0.85]">
+              {isWorkspacesPage ? (
+                <>All<br />Projects</>
+              ) : (
+                <>Welcome<br />Back.</>
+              )}
             </h1>
+            <p className="mt-6 text-xl font-bold uppercase tracking-widest border-l-4 border-foreground pl-4 ml-2 max-w-md">
+              {isWorkspacesPage ? "Your complete portfolio of digital real estate." : "Continue pushing boundaries."}
+            </p>
           </div>
 
-          <div className="relative max-w-sm w-full">
+          <div className="relative w-full max-w-sm reveal-on-scroll delay-100">
             <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-              <Search className="h-4 w-4 text-black/40" />
+              <Search className="h-5 w-5 text-foreground" />
             </div>
             <input
               type="text"
-              placeholder="Search projects..."
+              placeholder="SEARCH PROJECTS..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full h-12 pl-11 pr-4 bg-white border-[2px] border-black rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus:outline-none font-medium"
+              className="w-full h-14 pl-12 pr-4 bg-card border-2 border-foreground shadow-[8px_8px_0px_0px_rgba(26,26,26,1)] focus:outline-none focus:shadow-[12px_12px_0px_0px_rgba(26,26,26,1)] transition-all font-bold uppercase tracking-widest text-sm"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mt-8">
           {!isWorkspacesPage && (
-            <div className="space-y-8">
+            <div className="space-y-12 reveal-on-scroll delay-200">
               {mostRecent ? (
                 <FeaturedCard
                   title={mostRecent.title}
@@ -98,51 +105,51 @@ export default function Home() {
                   onContinue={() => console.log("Continue", mostRecent.id)}
                 />
               ) : (
-                <div className="h-64 rounded-[2rem] border-[3px] border-dashed border-black flex items-center justify-center">
-                  <Button onClick={() => setIsCreateOpen(true)}>Create First Workspace</Button>
+                <div className="h-64 brutal-card border-dashed flex items-center justify-center p-8 bg-card rotate-[-1deg]">
+                  <Button onClick={() => setIsCreateOpen(true)} className="accent-btn h-14 px-8 text-sm">Deploy Project</Button>
                 </div>
               )}
 
-              <div className="flex flex-wrap items-center gap-4">
+              <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-6">
                 <Button
                   onClick={() => setIsCreateOpen(true)}
-                  className="h-14 px-8 bg-[#0047FF] text-white border-[3px] border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:bg-[#0047FF] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all font-bold text-lg"
+                  className="accent-btn h-16 px-10 text-lg flex-1 sm:flex-none"
                 >
-                  + New Workspace
+                  NEW WORKSPACE
                 </Button>
 
                 <Button
-                  className="h-14 px-8 bg-[#D946EF] text-white border-[3px] border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:bg-[#D946EF] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all font-bold text-lg"
+                  className="brutal-card h-16 px-8 text-foreground font-bold uppercase tracking-wider text-lg hover:bg-foreground hover:text-white transition-colors flex-1 sm:flex-none"
                 >
-                  + Import Project
+                  IMPORT
                 </Button>
 
                 <Link href="/workspaces">
-                  <Button variant="ghost" className="text-black font-bold text-lg gap-2 hover:bg-transparent">
-                    View All
-                    <ArrowRight className="w-6 h-6" />
+                  <Button variant="ghost" className="text-foreground font-bold text-lg uppercase tracking-wider gap-3 hover:bg-transparent group">
+                    VIEW ALL
+                    <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
               </div>
             </div>
           )}
 
-          <div className={cn("space-y-6", isWorkspacesPage && "lg:col-span-2")}>
-            <div className="flex items-center justify-between gap-6">
-              <div className="flex items-center gap-6">
-                <h2 className="text-2xl font-bold border-b-[3px] border-black pb-1">
-                  {isWorkspacesPage ? "My Projects" : "Recent Workspace"}
+          <div className={cn("space-y-8 reveal-on-scroll delay-300", isWorkspacesPage && "lg:col-span-2")}>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b-2 border-foreground pb-4">
+              <div className="flex items-center gap-8">
+                <h2 className="text-3xl font-bold uppercase tracking-wider">
+                  {isWorkspacesPage ? "My Projects" : "Recent"}
                 </h2>
-                {!isWorkspacesPage && <h2 className="text-2xl font-bold text-black/30">Team</h2>}
+                {!isWorkspacesPage && <h2 className="text-3xl font-bold uppercase tracking-wider text-muted-foreground opacity-50">Team</h2>}
               </div>
 
               {isWorkspacesPage && (
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-black/40 uppercase tracking-wider">Sort by:</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Sort by:</span>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as any)}
-                    className="bg-transparent font-bold text-sm focus:outline-none cursor-pointer"
+                    className="bg-transparent font-bold text-sm uppercase tracking-wider focus:outline-none cursor-pointer hover:bg-black/5 p-1 transition-colors"
                   >
                     <option value="recent">Recent</option>
                     <option value="name">Name</option>
@@ -151,7 +158,7 @@ export default function Home() {
               )}
             </div>
 
-            <div className="rounded-[2.5rem] border-[3px] border-black p-6 space-y-4 bg-white/50">
+            <div className="brutal-card p-6 md:p-8 space-y-6 bg-card rotate-[0.5deg]">
               {filteredWorkspaces.map((workspace) => (
                 <WorkspaceCard
                   key={workspace.id}
@@ -160,9 +167,12 @@ export default function Home() {
                 />
               ))}
               {!filteredWorkspaces.length && (
-                <p className="text-center text-black/40 py-10 font-bold">
-                  {searchTerm ? "No projects match your search" : "No projects yet"}
-                </p>
+                <div className="text-center py-20 flex flex-col items-center justify-center gap-4">
+                  <Search className="w-12 h-12 text-muted-foreground/30" />
+                  <p className="text-muted-foreground/60 font-bold uppercase tracking-widest">
+                    {searchTerm ? "NO MATCHES IN THE VOID" : "EMPTY CATALOG"}
+                  </p>
+                </div>
               )}
             </div>
           </div>

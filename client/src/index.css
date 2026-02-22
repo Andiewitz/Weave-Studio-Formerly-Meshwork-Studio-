@@ -1,47 +1,49 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;600;900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-sans: 'DM Sans', sans-serif;
-  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Space Grotesk', sans-serif;
+  --font-serif: 'Inter', sans-serif;
 
-  /* Neo-Brutalist Theme - Off-white background, high contrast */
-  --background: 48 30% 96%;
-  /* #FDFCF8-ish */
-  --foreground: 0 0% 0%;
+  /* Lumina / Avant-Garde Theme */
+  --background: 0 0% 94%;
+  /* #F0F0F0 */
+  --foreground: 0 0% 10%;
+  /* #1A1A1A */
 
   --card: 0 0% 100%;
-  --card-foreground: 0 0% 0%;
+  --card-foreground: 0 0% 10%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 0%;
+  --popover-foreground: 0 0% 10%;
 
-  /* Primary - Vibrant Purple */
-  --primary: 262 83% 65%;
+  /* Primary (Accent) - #FF3D00 */
+  --primary: 14 100% 50%;
   --primary-foreground: 0 0% 100%;
 
-  /* Secondary - Clean White */
   --secondary: 0 0% 100%;
-  --secondary-foreground: 0 0% 0%;
+  --secondary-foreground: 0 0% 10%;
 
   --muted: 0 0% 90%;
   --muted-foreground: 0 0% 40%;
 
-  --accent: 262 83% 65%;
+  --accent: 14 100% 50%;
   --accent-foreground: 0 0% 100%;
 
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
 
-  --border: 0 0% 0%;
+  --border: 0 0% 10%;
   --input: 0 0% 100%;
-  --ring: 262 83% 65%;
+  --ring: 14 100% 50%;
 
-  --radius: 0.5rem;
+  --radius: 0rem;
+  /* Brutalist sharp corners */
 }
+
 
 .dark {
   /* Dark mode also neo-brutalist but inverted */
@@ -93,19 +95,53 @@
 
 @layer components {
   .neo-border {
-    @apply border-2 border-black dark:border-white;
+    @apply border-2 border-[#1A1A1A] dark:border-white;
   }
 
   .neo-shadow {
-    @apply shadow-[4px_4px_0px_0px_rgba(0, 0, 0, 1)] dark:shadow-[4px_4px_0px_0px_rgba(255, 255, 255, 1)];
+    @apply shadow-[8px_8px_0px_0px_rgba(26, 26, 26, 1)] dark:shadow-[8px_8px_0px_0px_rgba(255, 255, 255, 1)];
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .neo-shadow:hover {
+    transform: translate(-4px, -4px);
+    @apply shadow-[12px_12px_0px_0px_rgba(26, 26, 26, 1)] dark:shadow-[12px_12px_0px_0px_rgba(255, 255, 255, 1)];
   }
 
   .neo-shadow-lg {
-    @apply shadow-[6px_6px_0px_0px_rgba(0, 0, 0, 1)] dark:shadow-[6px_6px_0px_0px_rgba(255, 255, 255, 1)];
+    @apply shadow-[12px_12px_0px_0px_rgba(26, 26, 26, 1)] dark:shadow-[12px_12px_0px_0px_rgba(255, 255, 255, 1)];
   }
 
   .neo-card {
-    @apply neo-border neo-shadow bg-card p-4 rounded-xl;
+    @apply neo-border neo-shadow bg-card p-4 rounded-none;
+  }
+
+  .accent-btn {
+    @apply bg-primary text-primary-foreground neo-border font-bold uppercase tracking-wider;
+    box-shadow: 4px 4px 0px 0px rgba(26, 26, 26, 1);
+    transition: all 0.2s ease;
+  }
+
+  .accent-btn:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px 0px rgba(26, 26, 26, 1);
+    filter: brightness(1.1);
+  }
+
+  .weave-bg-text {
+    font-family: var(--font-serif);
+    font-size: 25vw;
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+    color: rgba(0, 0, 0, 0.03);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-5deg);
+    z-index: 0;
+    pointer-events: none;
+    white-space: nowrap;
+    user-select: none;
   }
 }
 

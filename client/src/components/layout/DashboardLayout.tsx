@@ -48,16 +48,16 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const SidebarContent = ({ isMobile = false }: { isMobile?: boolean }) => (
     <div className="flex flex-col h-full bg-white dark:bg-black overflow-hidden">
       <div className={cn(
-        "p-6 flex items-center transition-all duration-300",
-        (isExpanded || isMobile) ? "justify-between" : "justify-center"
+        "p-6 flex items-center transition-all duration-300 border-b-2 border-transparent",
+        (isExpanded || isMobile) ? "justify-between border-border" : "justify-center"
       )}>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-black flex items-center justify-center text-white font-bold font-serif text-xl border-2 border-black shrink-0">
+          <div className="w-10 h-10 rounded-none bg-foreground flex items-center justify-center text-background font-bold font-serif text-xl border-2 border-foreground shrink-0 shadow-[4px_4px_0px_0px_rgba(26,26,26,1)]">
             W
           </div>
           {(isExpanded || isMobile) && (
-            <span className="font-serif font-bold text-xl tracking-tight text-black truncate">
-              Studio
+            <span className="font-sans font-black text-xl tracking-tighter uppercase text-foreground truncate">
+              Weave Studio
             </span>
           )}
         </div>
@@ -81,20 +81,20 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             const isActive = location === item.href;
             return (
               <Link key={item.href} href={item.href} className={cn(
-                "flex items-center gap-4 h-12 rounded-xl transition-all duration-200 group relative",
+                "flex items-center gap-4 h-12 rounded-none transition-all duration-200 group relative border-2 border-transparent hover:border-foreground/20",
                 (isExpanded || isMobile) ? "px-4" : "justify-center",
                 isActive
-                  ? "bg-black text-white"
-                  : "text-black/40 hover:text-black hover:bg-black/5"
+                  ? "bg-foreground text-background brutal-card shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] border-foreground hover:border-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-black/5"
               )}>
-                <item.icon className="w-6 h-6 shrink-0" />
+                <item.icon className={cn("w-5 h-5 shrink-0", isActive && "text-background")} />
                 {(isExpanded || isMobile) && (
-                  <span className="font-medium whitespace-nowrap opacity-100 transition-opacity duration-300">
+                  <span className={cn("font-bold text-sm uppercase tracking-wider whitespace-nowrap opacity-100 transition-opacity duration-300", isActive && "text-background")}>
                     {item.label}
                   </span>
                 )}
                 {!isExpanded && !isMobile && (
-                  <div className="absolute left-full ml-4 px-2 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 whitespace-nowrap">
+                  <div className="absolute left-full ml-4 px-3 py-1.5 bg-foreground text-background font-bold text-xs uppercase tracking-wider rounded-none opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 whitespace-nowrap shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] border-2 border-foreground">
                     {item.label}
                   </div>
                 )}
@@ -109,29 +109,29 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         (isExpanded || isMobile) ? "items-stretch" : "items-center"
       )}>
         <button className={cn(
-          "flex items-center gap-4 h-12 rounded-xl text-blue-500 hover:bg-blue-50 transition-all",
+          "flex items-center gap-4 h-12 rounded-none text-primary border-2 border-transparent hover:border-primary/20 hover:bg-primary/5 transition-all font-bold uppercase tracking-wider text-sm",
           (isExpanded || isMobile) ? "px-4 w-full" : "justify-center w-12"
         )}>
-          <Sparkles className="w-6 h-6 shrink-0" />
-          {(isExpanded || isMobile) && <span className="font-medium">Upgrade</span>}
+          <Sparkles className="w-5 h-5 shrink-0" />
+          {(isExpanded || isMobile) && <span>Upgrade</span>}
         </button>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className={cn(
-              "flex items-center gap-3 rounded-xl transition-all border-2 border-transparent hover:border-black/5 p-1",
+              "flex items-center gap-3 rounded-none transition-all border-2 border-transparent hover:border-foreground/20 p-2 brutal-card shadow-none hover:shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] hover:bg-card hover:-translate-y-1 hover:-translate-x-1",
               (isExpanded || isMobile) ? "w-full" : "justify-center"
             )}>
-              <Avatar className="w-10 h-10 border-2 border-black shrink-0">
+              <Avatar className="w-10 h-10 border-2 border-foreground rounded-none shrink-0 bg-background">
                 <AvatarImage src={user?.profileImageUrl || undefined} />
-                <AvatarFallback className="bg-primary/10 text-primary">
+                <AvatarFallback className="bg-primary/10 text-primary rounded-none font-bold">
                   {user?.firstName?.[0] || user?.email?.[0] || "U"}
                 </AvatarFallback>
               </Avatar>
               {(isExpanded || isMobile) && (
                 <div className="flex flex-col items-start overflow-hidden">
-                  <span className="text-sm font-bold truncate w-full text-black">{user?.firstName || 'User'}</span>
-                  <span className="text-[10px] text-black/40 truncate w-full">{user?.email}</span>
+                  <span className="text-sm font-black uppercase tracking-tighter truncate w-full text-foreground">{user?.firstName || 'User'}</span>
+                  <span className="text-[10px] text-muted-foreground truncate w-full uppercase tracking-widest">{user?.email}</span>
                 </div>
               )}
             </button>
@@ -153,10 +153,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   );
 
   return (
-    <div className="min-h-screen bg-[#FDFCF8] dark:bg-background flex font-sans">
+    <div className="min-h-screen bg-background text-foreground flex font-sans relative overflow-x-hidden">
+      <div className="weave-bg-text">WEAVE STUDIO</div>
+
       {/* Desktop Sidebar */}
       <aside className={cn(
-        "hidden lg:block border-r-2 border-black fixed h-full z-30 transition-all duration-300 ease-in-out bg-white",
+        "hidden lg:block border-r-2 border-border fixed h-full z-30 transition-all duration-300 ease-in-out bg-card",
         isExpanded ? "w-64" : "w-20"
       )}>
         <SidebarContent />
@@ -164,19 +166,19 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Main Content */}
       <div className={cn(
-        "flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out",
+        "flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out relative z-10",
         isExpanded ? "lg:ml-64" : "lg:ml-20"
       )}>
         {/* Topbar */}
-        <header className="h-16 px-4 md:px-8 border-b-2 border-black bg-white sticky top-0 z-20 flex items-center justify-between">
+        <header className="h-16 px-4 md:px-8 border-b-2 border-border bg-card sticky top-0 z-20 flex items-center justify-between">
           <div className="flex items-center gap-4 lg:hidden">
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon">
-                  <Menu className="w-5 h-5" />
+                  <Menu className="w-5 h-5 text-foreground" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="p-0 w-64">
+              <SheetContent side="left" className="p-0 w-64 border-border">
                 <SidebarContent isMobile />
               </SheetContent>
             </Sheet>
@@ -185,8 +187,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="flex-1" />
 
           <div className="flex items-center gap-6">
-            <Bell className="w-6 h-6 text-black cursor-pointer" />
-            <div className="w-6 h-6 rounded-full border-2 border-black flex items-center justify-center font-bold text-xs cursor-pointer">
+            <Bell className="w-6 h-6 text-foreground cursor-pointer hover:rotate-12 transition-transform" />
+            <div className="w-6 h-6 rounded-none border-2 border-border flex items-center justify-center font-bold text-xs cursor-pointer hover:bg-black hover:text-white transition-colors">
               ?
             </div>
           </div>
@@ -194,7 +196,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
         {/* Page Content */}
         <main className="flex-1 p-6 md:p-12 overflow-y-auto">
-          <div className="max-w-6xl mx-auto space-y-12">
+          <div className="max-w-6xl mx-auto space-y-12 relative z-20">
             {children}
           </div>
         </main>

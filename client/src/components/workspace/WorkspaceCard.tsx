@@ -24,16 +24,19 @@ export function WorkspaceCard({ workspace, onDelete, onEdit }: WorkspaceCardProp
   return (
     <div
       onClick={() => setLocation(`/workspace/${workspace.id}`)}
-      className="group cursor-pointer flex items-center justify-between p-4 rounded-2xl border-[3px] border-black bg-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+      className="brutal-card cursor-pointer flex items-center justify-between p-6 bg-card transition-all group hover:bg-black/5"
     >
-      <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-xl border-[3px] border-black flex items-center justify-center bg-white transition-transform group-hover:scale-105 duration-300">
-          <Box className="w-7 h-7 text-black" />
+      <div className="flex items-center gap-6">
+        <div className="w-14 h-14 border-2 border-foreground flex items-center justify-center bg-card transition-transform group-hover:-rotate-6 duration-300">
+          <Box className="w-8 h-8 text-foreground" />
         </div>
-        <div>
-          <h3 className="font-bold text-xl text-black">
+        <div className="flex flex-col gap-1">
+          <h3 className="font-black text-2xl uppercase tracking-tighter text-foreground group-hover:text-primary transition-colors">
             {workspace.title}
           </h3>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground border-l-2 border-foreground pl-2 ml-1">
+            {workspace.type || "Canvas"} — {format(new Date(), "MMM dd")}
+          </span>
         </div>
       </div>
 
@@ -41,7 +44,7 @@ export function WorkspaceCard({ workspace, onDelete, onEdit }: WorkspaceCardProp
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 text-black"
+          className="h-10 w-10 text-foreground border-2 border-transparent hover:border-foreground hover:bg-foreground hover:text-white transition-all rounded-none"
           onClick={(e) => {
             e.stopPropagation();
           }}

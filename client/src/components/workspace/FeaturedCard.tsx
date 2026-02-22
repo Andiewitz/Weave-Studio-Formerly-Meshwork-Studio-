@@ -9,30 +9,30 @@ interface FeaturedCardProps {
 
 export function FeaturedCard({ title, type, onContinue }: FeaturedCardProps) {
   return (
-    <div className="relative rounded-[2rem] bg-[#A855F7] p-8 md:p-10 border-[3px] border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col gap-6">
-      <div className="flex justify-between items-start">
-        <h2 className="text-3xl md:text-4xl font-sans font-bold text-white max-w-sm leading-tight">
+    <div className="brutal-card bg-foreground text-background p-8 md:p-12 flex flex-col gap-8 relative overflow-hidden group">
+      <div className="flex justify-between items-start relative z-10">
+        <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter leading-[0.9] mix-blend-difference">
           {title}
         </h2>
-        <MoreHorizontal className="text-white w-8 h-8 cursor-pointer" />
+        <div className="bg-background text-foreground px-3 py-1 font-bold text-xs uppercase tracking-widest border-2 border-foreground">
+          {type || "Workspace"}
+        </div>
       </div>
 
-      <div className="mt-auto relative">
+      <div className="mt-8 relative z-10">
         <Button
           onClick={onContinue}
-          className="bg-white text-black border-[3px] border-black rounded-2xl px-6 h-12 hover:bg-white hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all font-bold group"
+          className="accent-btn h-14 px-8 text-lg flex items-center gap-3 w-fit"
         >
-          Continue Editing
-          <ArrowRight className="ml-2 w-5 h-5" />
+          CONTINUE EDITING
+          <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
         </Button>
+      </div>
 
-        {/* Decorative arrow path */}
-        <div className="absolute top-[-40px] left-[160px] text-white pointer-events-none hidden md:block">
-          <svg width="120" height="80" viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 70C30 70 50 60 60 40C70 20 90 10 110 10" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-            <path d="M100 0L115 10L100 20" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </div>
+      {/* Decorative avant-garde elements */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-primary mix-blend-multiply rounded-full blur-3xl opacity-20 pointer-events-none"></div>
+      <div className="absolute -bottom-10 -right-10 text-9xl font-black opacity-10 pointer-events-none transform -rotate-12 select-none">
+        01
       </div>
     </div>
   );

@@ -860,8 +860,8 @@ function WorkspaceView() {
                     </Link>
                     <div className="h-4 w-px mx-1 bg-white/10" />
                     <div className="flex items-center gap-2">
-                        <Box className="w-4 h-4 text-white/70" />
-                        <span className="font-medium text-white/90">Weaving Studio</span>
+                        <Box className="w-5 h-5 text-white" />
+                        <span className="font-sans font-black text-lg uppercase tracking-widest text-white/90">Weave Studio</span>
                     </div>
                 </div>
 
