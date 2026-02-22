@@ -18,14 +18,14 @@ export function FeaturedCard({ title, type, onContinue }: FeaturedCardProps) {
       </div>
 
       <div className="mt-auto relative">
-        <Button 
+        <Button
           onClick={onContinue}
           className="bg-white text-black border-[3px] border-black rounded-2xl px-6 h-12 hover:bg-white hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all font-bold group"
         >
           Continue Editing
           <ArrowRight className="ml-2 w-5 h-5" />
         </Button>
-        
+
         {/* Decorative arrow path */}
         <div className="absolute top-[-40px] left-[160px] text-white pointer-events-none hidden md:block">
           <svg width="120" height="80" viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">

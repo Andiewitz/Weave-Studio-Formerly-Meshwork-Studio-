@@ -33,6 +33,7 @@ import {
     MousePointer2,
     Square,
     Type,
+    Pencil,
     Share2,
     Settings,
     HelpCircle,
@@ -115,6 +116,7 @@ const nodeTypes = {
     app: SystemNode,
     api: SystemNode,
     note: SystemNode,
+    annotation: SystemNode,
     junction: SystemNode,
     // Kubernetes
     'k8s-pod': SystemNode,
@@ -262,21 +264,9 @@ function WorkspaceView() {
     const [edgeType, setEdgeType] = useState<'step' | 'straight' | 'smoothstep' | 'default'>('step');
     const [edgeStyle, setEdgeStyle] = useState<'solid' | 'dashed' | 'dotted'>('solid');
     const [hasArrow, setHasArrow] = useState(false);
+    const [drawingMode, setDrawingMode] = useState<'select' | 'annotation' | 'infrastructure'>('select');
     const { fitView } = useReactFlow();
-    const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
-        'Infrastructure': true,
-        'Kubernetes': true,
-        'Templates': true,
-        'Compute': true,
-        'Networking': true,
-        'Data': true,
-        'External': true,
-        'CI/CD': true,
-        'Security': true,
-        'Monitoring': true,
-        'Documentation': true,
-        'Utilities': true
-    });
+    const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
 
     const toggleCategory = (category: string) => {
         setExpandedCategories(prev => ({
@@ -398,36 +388,7 @@ function WorkspaceView() {
         return () => document.removeEventListener('click', handleClickOutside);
     }, []);
 
-    const onConnect = useCallback(
-        (params: Connection) => {
-            takeSnapshot();
-            const style: any = { stroke: '#444', strokeWidth: 2 };
-            if (edgeStyle === 'dashed') style.strokeDasharray = '5 5';
-            if (edgeStyle === 'dotted') style.strokeDasharray = '2 2';
-
-            setEdges((eds) => addEdge({
-                ...params,
-                type: edgeType,
-                style,
-                animated: isSimulating,
-                markerEnd: hasArrow ? { type: 'arrowclosed' as any, color: '#444' } : undefined
-            }, eds));
-        },
-        [setEdges, isSimulating, takeSnapshot, edgeType, edgeStyle, hasArrow],
-    );
-
-    const handleSave = () => {
-        sync({ nodes, edges }, {
-            onSuccess: () => {
-                toast({
-                    title: "Architecture Saved",
-                    description: "Distributed system config persisted.",
-                });
-            }
-        });
-    };
-
-    const addNode = (type: string, label: string, position = { x: 100, y: 100 }) => {
+    const addNode = useCallback((type: string, label: string, position = { x: 100, y: 100 }) => {
         takeSnapshot();
         const nodeTypeInfo = nodeTypesList.find(n => n.type === type);
 
@@ -471,6 +432,8 @@ function WorkspaceView() {
             shopify: { w: 168, h: 72 },
             paypal: { w: 168, h: 72 },
             note: { w: 192, h: 192 },
+            annotation: { w: 160, h: 48 },
+            text: { w: 200, h: 40 },
             vpc: { w: 408, h: 312 },
             region: { w: 600, h: 408 },
             // Kubernetes
@@ -504,7 +467,87 @@ function WorkspaceView() {
         };
         setNodes((nds) => nds.concat(newNode));
         return newNode;
+    }, [takeSnapshot, setNodes]);
+
+    const deleteNode = useCallback((id: string) => {
+        takeSnapshot();
+        setNodes((nds) => nds.filter((node) => node.id !== id));
+        setEdges((eds) => eds.filter((edge) => edge.source !== id && edge.target !== id));
+        if (selectedNodeId === id) setSelectedNodeId(null);
+    }, [takeSnapshot, setNodes, setEdges, selectedNodeId]);
+
+    const updateNodeData = useCallback((id: string, newData: any) => {
+        takeSnapshot();
+        setNodes((nds) =>
+            nds.map((node) => {
+                if (node.id === id) {
+                    return { ...node, data: { ...node.data, ...newData } };
+                }
+                return node;
+            })
+        );
+    }, [takeSnapshot, setNodes]);
+
+    const updateNodeStyle = useCallback((id: string, style: any) => {
+        takeSnapshot();
+        const snappedStyle = typeof style === 'object' ? { ...style } : { border: style };
+
+        if (typeof snappedStyle.width === 'number') snappedStyle.width = Math.round(snappedStyle.width / 24) * 24;
+        if (typeof snappedStyle.height === 'number') snappedStyle.height = Math.round(snappedStyle.height / 24) * 24;
+
+        setNodes((nds) =>
+            nds.map((node) => {
+                if (node.id === id) {
+                    return { ...node, style: { ...node.style, ...snappedStyle } };
+                }
+                return node;
+            })
+        );
+    }, [takeSnapshot, setNodes]);
+
+    const onConnect = useCallback(
+        (params: Connection) => {
+            takeSnapshot();
+            const style: any = { stroke: '#444', strokeWidth: 2 };
+            if (edgeStyle === 'dashed') style.strokeDasharray = '5 5';
+            if (edgeStyle === 'dotted') style.strokeDasharray = '2 2';
+
+            setEdges((eds) => addEdge({
+                ...params,
+                type: edgeType,
+                style,
+                animated: isSimulating,
+                markerEnd: hasArrow ? { type: 'arrowclosed' as any, color: '#444' } : undefined
+            }, eds));
+        },
+        [setEdges, isSimulating, takeSnapshot, edgeType, edgeStyle, hasArrow],
+    );
+
+    const onPaneClick = useCallback((event: React.MouseEvent) => {
+        const position = screenToFlowPosition({
+            x: event.clientX,
+            y: event.clientY,
+        });
+
+        if (drawingMode === 'annotation') {
+            addNode('annotation', 'Click to edit...', position);
+        } else if (drawingMode === 'infrastructure') {
+            addNode('vpc', 'New VPC', position);
+        }
+    }, [drawingMode, screenToFlowPosition, addNode]);
+
+    const handleSave = () => {
+        sync({ nodes, edges }, {
+            onSuccess: () => {
+                toast({
+                    title: "Architecture Saved",
+                    description: "Distributed system config persisted.",
+                });
+            }
+        });
     };
+
+
 
     const onNodeContextMenu = useCallback(
         (event: React.MouseEvent, node: Node) => {
@@ -684,15 +727,7 @@ function WorkspaceView() {
         [screenToFlowPosition, addNode, takeSnapshot, setNodes, setEdges]
     );
 
-    const deleteNode = useCallback(
-        (id: string) => {
-            takeSnapshot();
-            setNodes((nds) => nds.filter((node) => node.id !== id));
-            setEdges((eds) => eds.filter((edge) => edge.source !== id && edge.target !== id));
-            if (selectedNodeId === id) setSelectedNodeId(null);
-        },
-        [setNodes, setEdges, selectedNodeId, takeSnapshot]
-    );
+
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -742,33 +777,7 @@ function WorkspaceView() {
         }
     }, []);
 
-    const updateNodeData = (id: string, newData: any) => {
-        takeSnapshot();
-        setNodes((nds) =>
-            nds.map((node) => {
-                if (node.id === id) {
-                    return { ...node, data: { ...node.data, ...newData } };
-                }
-                return node;
-            })
-        );
-    };
 
-    const updateNodeStyle = (id: string, style: any) => {
-        takeSnapshot();
-        const snappedStyle = { ...style };
-        if (typeof snappedStyle.width === 'number') snappedStyle.width = Math.round(snappedStyle.width / 24) * 24;
-        if (typeof snappedStyle.height === 'number') snappedStyle.height = Math.round(snappedStyle.height / 24) * 24;
-
-        setNodes((nds) =>
-            nds.map((node) => {
-                if (node.id === id) {
-                    return { ...node, style: { ...node.style, ...snappedStyle } };
-                }
-                return node;
-            })
-        );
-    };
 
     const onNodeDragStart = useCallback(() => {
         takeSnapshot();
@@ -896,17 +905,23 @@ function WorkspaceView() {
                                     let hasAnyResults = false;
 
                                     const content = categories.map(category => {
-                                        const categoryItems = nodeTypesList.filter(item =>
-                                            item.category.toLowerCase() === category.toLowerCase() &&
-                                            (searchTerm === '' ||
-                                                item.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                                item.type.toLowerCase().includes(searchTerm.toLowerCase()))
-                                        ).sort((a, b) => a.label.localeCompare(b.label));
+                                        const searchKeywords = searchTerm.toLowerCase().split(' ').filter(k => k.length > 0);
+
+                                        const categoryItems = nodeTypesList.filter(item => {
+                                            const matchesCategory = item.category.toLowerCase() === category.toLowerCase();
+                                            if (!matchesCategory) return false;
+
+                                            if (searchKeywords.length === 0) return true;
+
+                                            const targetText = `${item.label} ${item.type} ${item.category}`.toLowerCase();
+                                            return searchKeywords.every(keyword => targetText.includes(keyword));
+                                        }).sort((a, b) => a.label.localeCompare(b.label));
 
                                         if (categoryItems.length === 0) return null;
                                         hasAnyResults = true;
 
-                                        const isExpanded = expandedCategories[category] !== false;
+                                        // Auto-expand if searching, otherwise use state
+                                        const isExpanded = searchTerm !== '' ? true : (expandedCategories[category] === true);
                                         const isK8s = category === 'Kubernetes';
                                         const isTemplate = category === 'Templates';
 
@@ -975,7 +990,10 @@ function WorkspaceView() {
                     <ResizableHandle withHandle className="bg-black/5" />
 
                     <ResizablePanel defaultSize={60}>
-                        <main className="h-full relative transition-colors duration-300 bg-[#FDFCF8]">
+                        <main
+                            className="h-full relative transition-colors duration-300 bg-[#FDFCF8]"
+                            data-cursor={drawingMode}
+                        >
                             <ReactFlow
                                 nodes={nodes}
                                 edges={edges}
@@ -988,10 +1006,12 @@ function WorkspaceView() {
                                 onNodeDragStop={onNodeDragStop}
                                 onNodeContextMenu={onNodeContextMenu}
                                 onPaneContextMenu={onPaneContextMenu as any}
+                                onPaneClick={onPaneClick}
                                 onDragOver={onDragOver}
                                 onDrop={onDrop}
                                 nodeTypes={nodeTypes}
                                 fitView
+                                style={{ cursor: 'inherit' }}
                                 defaultEdgeOptions={{
                                     type: 'step',
                                     style: { stroke: '#444', strokeWidth: 2 },
@@ -1213,14 +1233,29 @@ function WorkspaceView() {
                                 )}
 
                                 <Panel position="bottom-center" className="mb-8 flex items-center border rounded-2xl shadow-2xl p-1.5 gap-1.5 z-50 bg-white border-black/10">
-                                    <button className="p-2.5 rounded-xl transition-all bg-black/10 text-black hover:bg-black/20">
+                                    <button
+                                        onClick={() => {
+                                            setDrawingMode('select');
+                                            fitView({ duration: 800 });
+                                        }}
+                                        className={`p-2.5 rounded-xl transition-all ${drawingMode === 'select' ? 'bg-black text-white shadow-lg' : 'text-black/40 hover:text-black hover:bg-black/5'}`}
+                                        title="Selection Tool"
+                                    >
                                         <MousePointer2 className="w-4 h-4" />
                                     </button>
-                                    <button className="p-2.5 rounded-xl transition-all text-black/40 hover:text-black hover:bg-black/5">
+                                    <button
+                                        onClick={() => setDrawingMode(drawingMode === 'infrastructure' ? 'select' : 'infrastructure')}
+                                        className={`p-2.5 rounded-xl transition-all ${drawingMode === 'infrastructure' ? 'bg-black text-white shadow-lg' : 'text-black/40 hover:text-black hover:bg-black/5'}`}
+                                        title="Infrastructure Tool (Click map to place VPC)"
+                                    >
                                         <Square className="w-4 h-4" />
                                     </button>
-                                    <button className="p-2.5 rounded-xl transition-all text-black/40 hover:text-black hover:bg-black/5">
-                                        <Type className="w-4 h-4" />
+                                    <button
+                                        onClick={() => setDrawingMode(drawingMode === 'annotation' ? 'select' : 'annotation')}
+                                        className={`p-2.5 rounded-xl transition-all ${drawingMode === 'annotation' ? 'bg-black text-white shadow-lg' : 'text-black/40 hover:text-black hover:bg-black/5'}`}
+                                        title="Annotation Tool (Click map to place)"
+                                    >
+                                        <Pencil className="w-4 h-4" />
                                     </button>
                                     <Popover>
                                         <PopoverTrigger asChild>
@@ -1241,7 +1276,11 @@ function WorkspaceView() {
                                                 ].map((tool) => (
                                                     <button
                                                         key={tool.id}
-                                                        onClick={() => setEdgeType(tool.id as any)}
+                                                        onClick={() => {
+                                                            setEdgeType(tool.id as any);
+                                                            // Apply to selected edges
+                                                            setEdges(eds => eds.map(e => e.selected ? { ...e, type: tool.id } : e));
+                                                        }}
                                                         className={`p-2 rounded-lg transition-all ${edgeType === tool.id ? 'bg-black text-white' : 'text-black/40 hover:text-black hover:bg-black/5'}`}
                                                     >
                                                         <tool.icon className={`w-4 h-4 ${tool.rotate ? 'rotate-45' : ''}`} />
@@ -1269,8 +1308,18 @@ function WorkspaceView() {
                                                 ].map((style) => (
                                                     <button
                                                         key={style.id}
-                                                        onClick={() => setEdgeStyle(style.id as any)}
-                                                        className={`p-2.5 rounded-lg transition-all ${edgeStyle === style.id ? 'bg-black text-white' : 'text-black/40 hover:text-black hover:bg-black/5'}`}
+                                                        onClick={() => {
+                                                            setEdgeStyle(style.id as any);
+                                                            // Apply to selected edges
+                                                            setEdges(eds => eds.map(e => {
+                                                                if (!e.selected) return e;
+                                                                const s: any = { ...e.style, strokeDasharray: undefined };
+                                                                if (style.id === 'dashed') s.strokeDasharray = '5 5';
+                                                                if (style.id === 'dotted') s.strokeDasharray = '2 2';
+                                                                return { ...e, style: s };
+                                                            }));
+                                                        }}
+                                                        className={`flex items-center justify-between px-3 py-2 text-[12px] transition-colors rounded-lg ${edgeStyle === style.id ? 'bg-black text-white' : 'text-black/70 hover:bg-black/5 hover:text-black'}`}
                                                     >
                                                         {style.id === 'solid' ? <Minus className="w-4 h-4" /> : <div className={`w-4 h-0.5 ${style.id === 'dashed' ? 'border-b-2 border-dashed' : 'border-b-2 border-dotted'} ${edgeStyle === style.id ? 'border-white' : 'border-black/40'}`} />}
                                                     </button>

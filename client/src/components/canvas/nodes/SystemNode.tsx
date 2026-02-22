@@ -86,7 +86,7 @@ const providerBrands: Record<string, NodeBrand> = {
     dynamodb: { logo: 'https://cdn.simpleicons.org/amazondynamodb/white', color: '#4053D6', borderColor: '#3342AB', label: 'DYNAMODB' },
 };
 
-export function SystemNode({ data, selected, type }: NodeProps) {
+export function SystemNode({ data, selected, type, width, height }: NodeProps) {
     const provider = (data.provider as string || '').toLowerCase();
     const isInfrastructure = type === 'vpc' || type === 'region';
     const isNote = type === 'note';
@@ -94,6 +94,10 @@ export function SystemNode({ data, selected, type }: NodeProps) {
     const isK8sNamespace = type === 'k8s-namespace';
     const isData = (data.category as string || '').toLowerCase() === 'data';
     const k8sStatus = (data.status as string) || '';
+
+    // Calculate dynamic font sizes based on container width
+    const zoneLabelSize = width ? Math.max(9, Math.floor(width / 40)) : 9;
+    const zoneIconSize = width ? Math.max(12, Math.floor(width / 30)) : 12;
 
     const brand: NodeBrand = isKubernetes
         ? { logo: 'https://cdn.simpleicons.org/kubernetes/white', color: '#326CE5', borderColor: '#2457B5', label: (type as string)?.replace('k8s-', '').toUpperCase() || 'K8S' }
@@ -153,8 +157,25 @@ export function SystemNode({ data, selected, type }: NodeProps) {
                 <Handle type="target" position={Position.Right} id="r-t" className={handleCls} />
                 <Handle type="source" position={Position.Right} id="r-s" className={handleCls} />
 
-                {/* ── STICKY NOTE ── */}
-                {isNote ? (
+                {/* ── PLAIN TEXT ANNOTATION ── */}
+                {type === 'annotation' ? (
+                    <div
+                        className={`
+                            relative w-full h-full flex flex-col p-2
+                            ${selected ? 'border-2 border-blue-500/30 bg-blue-500/5' : 'border-2 border-transparent group-hover:border-black/5'}
+                            transition-all cursor-text
+                        `}
+                    >
+                        <p
+                            className="leading-tight font-medium whitespace-pre-wrap break-all w-full max-w-full text-black/80 font-sans"
+                            style={{ fontSize: `${Math.max(14, Math.floor((width || 160) / 10))}px` }}
+                        >
+                            {(data.label as string) || 'Annotation'}
+                        </p>
+                    </div>
+
+                    /* ── STICKY NOTE ── */
+                ) : isNote ? (
                     <div
                         className={`
                             relative p-4 border-2 overflow-hidden w-full h-full flex flex-col
@@ -162,7 +183,13 @@ export function SystemNode({ data, selected, type }: NodeProps) {
                             ${selected ? 'shadow-[6px_6px_0px_rgba(0,0,0,0.12)]' : 'group-hover:shadow-[3px_3px_0px_rgba(0,0,0,0.06)]'}
                         `}
                     >
-                        <p className="text-[14px] leading-relaxed font-semibold whitespace-pre-wrap break-all italic w-full max-w-full text-yellow-900/80" style={{ fontFamily: 'var(--font-serif)' }}>
+                        <p
+                            className="leading-relaxed font-semibold whitespace-pre-wrap break-all italic w-full max-w-full text-yellow-900/80"
+                            style={{
+                                fontFamily: 'var(--font-serif)',
+                                fontSize: `${Math.max(14, Math.floor((width || 192) / 12))}px`
+                            }}
+                        >
                             {(data.label as string) || ''}
                         </p>
                     </div>
@@ -180,13 +207,21 @@ export function SystemNode({ data, selected, type }: NodeProps) {
                         }}
                     >
                         {/* Zone label — relative, inside the container */}
-                        <div className="flex items-center gap-2 px-3 py-1.5 self-start">
+                        <div className="flex items-center gap-2 px-3 py-1.5 self-start" style={{ padding: `${zoneLabelSize / 2}px` }}>
                             <div
-                                className="px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.15em] text-white flex items-center gap-2"
-                                style={{ backgroundColor: finalColor }}
+                                className="px-2 py-0.5 font-black uppercase tracking-[0.15em] text-white flex items-center gap-2"
+                                style={{
+                                    backgroundColor: finalColor,
+                                    fontSize: `${zoneLabelSize}px`
+                                }}
                             >
                                 {brand.logo && (
-                                    <img src={brand.logo} className="w-3 h-3 object-contain" alt="" />
+                                    <img
+                                        src={brand.logo}
+                                        className="object-contain"
+                                        style={{ width: zoneIconSize, height: zoneIconSize }}
+                                        alt=""
+                                    />
                                 )}
                                 {brand.label}: {data.label as string}
                             </div>
@@ -202,9 +237,17 @@ export function SystemNode({ data, selected, type }: NodeProps) {
                         `}
                     >
                         {/* Namespace label — relative, inside the container */}
-                        <div className="flex items-center gap-2 px-3 py-1.5 self-start">
-                            <div className="px-2 py-0.5 bg-[#326CE5] text-[9px] font-black uppercase tracking-[0.15em] text-white flex items-center gap-1.5">
-                                <img src="https://cdn.simpleicons.org/kubernetes/white" className="w-3 h-3 object-contain" alt="" />
+                        <div className="flex items-center gap-2 px-3 py-1.5 self-start" style={{ padding: `${zoneLabelSize / 2}px` }}>
+                            <div
+                                className="px-2 py-0.5 bg-[#326CE5] font-black uppercase tracking-[0.15em] text-white flex items-center gap-1.5"
+                                style={{ fontSize: `${zoneLabelSize}px` }}
+                            >
+                                <img
+                                    src="https://cdn.simpleicons.org/kubernetes/white"
+                                    style={{ width: zoneIconSize, height: zoneIconSize }}
+                                    className="object-contain"
+                                    alt=""
+                                />
                                 ns: {data.label as string}
                             </div>
                         </div>
