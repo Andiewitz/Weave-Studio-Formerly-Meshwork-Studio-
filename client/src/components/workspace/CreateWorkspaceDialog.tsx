@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -46,6 +47,7 @@ interface CreateWorkspaceDialogProps {
 }
 
 export function CreateWorkspaceDialog({ open, onOpenChange }: CreateWorkspaceDialogProps) {
+  const [, setLocation] = useLocation();
   const { user } = useAuth();
   const { toast } = useToast();
   const createWorkspace = useCreateWorkspace();
@@ -64,13 +66,14 @@ export function CreateWorkspaceDialog({ open, onOpenChange }: CreateWorkspaceDia
     createWorkspace.mutate(
       { ...values, userId: user.id },
       {
-        onSuccess: () => {
+        onSuccess: (newWorkspace) => {
           toast({
             title: "Workspace created",
             description: "Your new workspace is ready.",
           });
           onOpenChange(false);
           form.reset();
+          setLocation(`/workspace/${newWorkspace.id}`);
         },
         onError: () => {
           toast({

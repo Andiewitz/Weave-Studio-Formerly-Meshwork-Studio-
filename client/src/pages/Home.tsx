@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
 export default function Home() {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const { user, isLoading: isAuthLoading } = useAuth();
   const { data: workspaces, isLoading: isWorkspacesLoading } = useWorkspaces();
   const deleteWorkspace = useDeleteWorkspace();
@@ -62,7 +62,10 @@ export default function Home() {
     );
   }
 
-  const mostRecent = workspaces?.[0];
+  const mostRecent = useMemo(() => {
+    if (!workspaces) return null;
+    return [...workspaces].sort((a, b) => b.id - a.id)[0];
+  }, [workspaces]);
 
   return (
     <DashboardLayout>
@@ -89,7 +92,7 @@ export default function Home() {
                 <FeaturedCard
                   title={mostRecent.title}
                   type={mostRecent.type}
-                  onContinue={() => console.log("Continue", mostRecent.id)}
+                  onContinue={() => setLocation(`/workspace/${mostRecent.id}`)}
                 />
               ) : (
                 <div className="h-64 brutal-card border-dashed flex items-center justify-center p-8 bg-card rotate-[-1deg]">
