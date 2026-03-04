@@ -38,7 +38,8 @@ const getSession = () => {
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
       maxAge: sessionTtl,
     },
   });
