@@ -62,7 +62,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           )}
           {(isExpanded || isMobile) && (
             <span className="font-display font-semibold text-lg tracking-tight text-foreground truncate">
-              Meshwork
+              Meshwork Studio
             </span>
           )}
         </div>
@@ -86,15 +86,15 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             const isActive = location === item.href;
             return (
               <Link key={item.href} href={item.href} className={cn(
-                "flex items-center gap-3 h-10 rounded-md transition-all duration-200 group relative",
+                "flex items-center gap-3 h-10 rounded-lg transition-all duration-200 group relative",
                 (isExpanded || isMobile) ? "px-3" : "justify-center",
                 isActive
-                  ? "bg-primary/10 text-primary font-medium"
+                  ? "bg-foreground text-background font-medium shadow-sm"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
               )}>
-                <item.icon className={cn("w-4 h-4 shrink-0", isActive && "text-primary")} />
+                <item.icon className={cn("w-4 h-4 shrink-0", isActive && "text-background")} />
                 {(isExpanded || isMobile) && (
-                  <span className={cn("font-sans text-sm font-medium whitespace-nowrap opacity-100 transition-opacity duration-300", isActive && "text-primary")}>
+                  <span className={cn("font-sans text-sm font-medium whitespace-nowrap opacity-100 transition-opacity duration-300", isActive && "text-background")}>
                     {item.label}
                   </span>
                 )}
@@ -127,9 +127,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               "flex items-center gap-2 rounded-md transition-all hover:bg-muted p-1.5",
               (isExpanded || isMobile) ? "w-full" : "justify-center"
             )}>
-              <Avatar className="w-8 h-8 border border-border rounded-md shrink-0 bg-background">
+              <Avatar className="w-8 h-8 border border-border rounded-full shrink-0 bg-background">
                 <AvatarImage src={user?.profileImageUrl || undefined} />
-                <AvatarFallback className="bg-primary/10 text-primary rounded-md font-display font-semibold text-sm">
+                <AvatarFallback className="bg-primary/10 text-primary rounded-full font-display font-semibold text-sm">
                   {user?.firstName?.[0] || user?.email?.[0] || "U"}
                 </AvatarFallback>
               </Avatar>
