@@ -177,20 +177,29 @@ export function FeaturedCard({ workspace, onContinue, onDelete }: FeaturedCardPr
                 <ExternalLink className="w-4 h-4" /> OPEN
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => setIsRenaming(true)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsRenaming(true);
+                }}
                 className="gap-2 font-bold cursor-pointer"
               >
                 <Pencil className="w-4 h-4" /> RENAME
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={handleDuplicate}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDuplicate();
+                }}
                 className="gap-2 font-bold cursor-pointer"
               >
                 <Copy className="w-4 h-4" /> DUPLICATE
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-foreground/10" />
               <DropdownMenuItem
-                onClick={() => onDelete?.(workspace.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete?.(workspace.id);
+                }}
                 className="gap-2 font-bold text-destructive focus:text-destructive cursor-pointer"
               >
                 <Trash className="w-4 h-4" /> DELETE
