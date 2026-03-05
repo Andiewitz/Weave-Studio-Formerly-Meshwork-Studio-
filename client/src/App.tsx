@@ -32,10 +32,10 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
 
 const PageTransition = ({ children, className }: { children: React.ReactNode; className?: string }) => (
   <motion.div
-    initial={{ opacity: 0, y: 30, scale: 0.98 }}
-    animate={{ opacity: 1, y: 0, scale: 1 }}
-    exit={{ opacity: 0, y: -20, scale: 0.98 }}
-    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+    initial={{ opacity: 0, y: 8 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: 8 }}
+    transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
     className={cn("flex-1", className)}
   >
     {children}
@@ -46,9 +46,8 @@ function Router() {
   const [location] = useLocation();
   const { user, isLoading, isRedirecting } = useAuth();
 
-  // Auth routes - render immediately without waiting for auth check (fixes blank screen)
+  // Auth routes
   if (location.startsWith("/auth/")) {
-    // Still show loading screen during redirect after logout
     if (isRedirecting) {
       return <RedirectingScreen />;
     }
@@ -56,10 +55,10 @@ function Router() {
       <AnimatePresence mode="wait">
         <motion.div
           key={location}
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
           className="min-h-screen"
         >
           <Switch location={location} key={location}>
@@ -83,16 +82,16 @@ function Router() {
     return <RedirectingScreen />;
   }
 
-  // Workspace routes
+  // Workspace routes - scale animation from card
   if (location.startsWith("/workspace/")) {
     return (
       <AnimatePresence mode="wait">
         <motion.div
           key={location}
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -30 }}
-          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.98 }}
+          transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
           className="h-full"
         >
           <Switch location={location} key={location}>
@@ -111,10 +110,10 @@ function Router() {
       <AnimatePresence mode="wait">
         <motion.div
           key={location}
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
           className="flex-1"
         >
           <Switch location={location} key={location}>
