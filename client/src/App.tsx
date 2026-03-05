@@ -37,6 +37,7 @@ const PageTransition = ({ children, className }: { children: React.ReactNode; cl
     exit={{ opacity: 0, y: 8 }}
     transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
     className={cn("flex-1", className)}
+    style={{ willChange: "opacity, transform" }}
   >
     {children}
   </motion.div>
@@ -52,14 +53,15 @@ function Router() {
       return <RedirectingScreen />;
     }
     return (
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={location}
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
           className="min-h-screen"
+          style={{ willChange: "opacity, transform" }}
         >
           <Switch location={location} key={location}>
             <Route path="/auth/login">
@@ -85,14 +87,15 @@ function Router() {
   // Workspace routes - scale animation from card
   if (location.startsWith("/workspace/")) {
     return (
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={location}
-          initial={{ opacity: 0, scale: 1.05 }}
+          initial={{ opacity: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.98 }}
           transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
           className="h-full"
+          style={{ willChange: "opacity, transform" }}
         >
           <Switch location={location} key={location}>
             <Route path="/workspace/:id">
@@ -107,14 +110,15 @@ function Router() {
   // Dashboard routes with layout
   return (
     <DashboardLayout>
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={location}
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
           className="flex-1"
+          style={{ willChange: "opacity, transform" }}
         >
           <Switch location={location} key={location}>
             <Route path="/">
