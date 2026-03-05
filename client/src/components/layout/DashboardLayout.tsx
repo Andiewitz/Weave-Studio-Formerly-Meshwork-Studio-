@@ -201,7 +201,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </header>
 
         {/* Page Content - Add padding-top for fixed header */}
-        <main className="flex-1 p-6 md:p-12 pt-24 overflow-y-auto scrollbar-hide">
+        <main className="flex-1 p-6 md:p-12 pt-44 overflow-y-auto scrollbar-hide">
           <div className="max-w-[1400px] mx-auto space-y-12 relative z-20">
             {children}
           </div>
