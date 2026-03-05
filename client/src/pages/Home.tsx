@@ -6,7 +6,7 @@ import { FeaturedCard } from "@/components/workspace/FeaturedCard";
 import { WorkspaceCard } from "@/components/workspace/WorkspaceCard";
 import { CreateWorkspaceDialog } from "@/components/workspace/CreateWorkspaceDialog";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Loader2, Search, Box } from "lucide-react";
+import { ArrowRight, Loader2, Search, Box, Trash2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -20,6 +20,8 @@ export default function Home() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<"recent" | "name">("recent");
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
 
   const isWorkspacesPage = location === "/workspaces";
 
@@ -30,7 +32,52 @@ export default function Home() {
           title: "Deleted",
           description: "Workspace has been removed.",
         });
+        setSelectedIds(prev => {
+          const next = new Set(prev);
+          next.delete(id);
+          return next;
+        });
       },
+    });
+  };
+
+  const handleToggleSelection = (id: number) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const handleSelectAll = () => {
+    if (filteredWorkspaces.length === selectedIds.size) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(filteredWorkspaces.map(w => w.id)));
+    }
+  };
+
+  const handleBulkDelete = () => {
+    const ids = Array.from(selectedIds);
+    let completed = 0;
+    ids.forEach(id => {
+      deleteWorkspace.mutate(id, {
+        onSuccess: () => {
+          completed++;
+          if (completed === ids.length) {
+            toast({
+              title: "Deleted",
+              description: `${completed} workspaces removed.`,
+            });
+            setSelectedIds(new Set());
+            setIsMultiSelectMode(false);
+          }
+        },
+      });
     });
   };
 
@@ -163,6 +210,56 @@ export default function Home() {
               {!isWorkspacesPage && <h2 className="text-2xl font-black text-muted-foreground uppercase tracking-wider">Team</h2>}
             </div>
 
+            <div className="flex items-center gap-3 flex-wrap">
+              {isWorkspacesPage && (
+                <>
+                  {!isMultiSelectMode ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setIsMultiSelectMode(true)}
+                      className="font-bold uppercase tracking-wider text-xs"
+                    >
+                      Select Multiple
+                    </Button>
+                  ) : (
+                    <>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleSelectAll}
+                        className="font-bold uppercase tracking-wider text-xs"
+                      >
+                        {selectedIds.size === filteredWorkspaces.length ? "Deselect All" : "Select All"}
+                      </Button>
+                      {selectedIds.size > 0 && (
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={handleBulkDelete}
+                          className="font-bold uppercase tracking-wider text-xs gap-2"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Delete ({selectedIds.size})
+                        </Button>
+                      )}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setIsMultiSelectMode(false);
+                          setSelectedIds(new Set());
+                        }}
+                        className="font-bold uppercase tracking-wider text-xs"
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+
             <div className="relative w-full max-w-[240px] reveal-on-scroll delay-100">
               <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
                 <Search className="h-4 w-4 text-foreground/40" />
@@ -197,6 +294,9 @@ export default function Home() {
                 key={workspace.id}
                 workspace={workspace}
                 onDelete={handleDelete}
+                isSelected={selectedIds.has(workspace.id)}
+                onToggleSelect={handleToggleSelection}
+                isMultiSelectMode={isMultiSelectMode}
               />
             ))}
             {!filteredWorkspaces.length && (

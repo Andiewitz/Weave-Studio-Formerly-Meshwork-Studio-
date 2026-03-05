@@ -70,9 +70,12 @@ function getWorkspaceIcon(iconId?: string): LucideIcon {
 interface WorkspaceCardProps {
   workspace: Workspace;
   onDelete?: (id: number) => void;
+  isSelected?: boolean;
+  onToggleSelect?: (id: number) => void;
+  isMultiSelectMode?: boolean;
 }
 
-export function WorkspaceCard({ workspace, onDelete }: WorkspaceCardProps) {
+export function WorkspaceCard({ workspace, onDelete, isSelected, onToggleSelect, isMultiSelectMode }: WorkspaceCardProps) {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const updateWorkspace = useUpdateWorkspace();
@@ -252,7 +255,31 @@ export function WorkspaceCard({ workspace, onDelete }: WorkspaceCardProps) {
   return (
     <ContextMenu>
       <ContextMenuTrigger>
-        <div className="brutal-card cursor-pointer flex items-center justify-between p-4 bg-card transition-all group hover:bg-black/5 relative overflow-hidden">
+        <div 
+          className={cn(
+            "brutal-card cursor-pointer flex items-center justify-between p-4 bg-card transition-all group hover:bg-black/5 relative overflow-hidden",
+            isSelected && "bg-primary/10 border-primary"
+          )}
+          onClick={() => isMultiSelectMode && onToggleSelect?.(workspace.id)}
+        >
+          {/* Checkbox for multi-select */}
+          {isMultiSelectMode && (
+            <div className="mr-3">
+              <div 
+                className={cn(
+                  "w-5 h-5 border-2 border-foreground flex items-center justify-center transition-colors",
+                  isSelected ? "bg-primary border-primary" : "bg-card"
+                )}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleSelect?.(workspace.id);
+                }}
+              >
+                {isSelected && <div className="w-3 h-3 bg-white" />}
+              </div>
+            </div>
+          )}
+          
           {/* Accent bar on hover */}
           <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary scale-y-0 group-hover:scale-y-100 transition-transform origin-top" />
 
