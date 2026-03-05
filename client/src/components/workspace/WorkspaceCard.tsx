@@ -260,7 +260,13 @@ export function WorkspaceCard({ workspace, onDelete, isSelected, onToggleSelect,
             "brutal-card cursor-pointer flex items-center justify-between p-4 bg-card transition-all group hover:bg-black/5 relative overflow-hidden",
             isSelected && "bg-primary/10 border-primary"
           )}
-          onClick={() => isMultiSelectMode && onToggleSelect?.(workspace.id)}
+          onClick={() => {
+            if (isMultiSelectMode) {
+              onToggleSelect?.(workspace.id);
+            } else {
+              setLocation(`/workspace/${workspace.id}`);
+            }
+          }}
         >
           {/* Checkbox for multi-select */}
           {isMultiSelectMode && (
@@ -316,8 +322,7 @@ export function WorkspaceCard({ workspace, onDelete, isSelected, onToggleSelect,
                 />
               ) : (
                 <h3 
-                  onClick={() => setLocation(`/workspace/${workspace.id}`)}
-                  className="font-black text-xl uppercase tracking-tighter text-foreground group-hover:text-primary transition-colors leading-tight truncate cursor-pointer"
+                  className="font-black text-xl uppercase tracking-tighter text-foreground group-hover:text-primary transition-colors leading-tight truncate"
                 >
                   {workspace.title || "Untitled Blueprint"}
                 </h3>
