@@ -17,70 +17,70 @@ interface BlogPost {
 const fakePosts: BlogPost[] = [
   {
     id: 1,
-    title: "Improving skill-creator: Test, measure, and refine Agent Skills",
-    subtitle: "Skill authors can now verify that their skills work, catch regressions, and improve descriptions.",
+    title: "Building real-time collaborative canvas editing",
+    subtitle: "How we implemented WebSockets for live node synchronization across multiple users.",
     date: "Mar 3, 2026",
-    category: "Claude Code",
-    readTime: "5 min read",
+    category: "Engineering",
+    readTime: "8 min read",
     imageColor: "bg-[#E8DED5]",
-    imagePattern: "chart"
+    imagePattern: "nodes"
   },
   {
     id: 2,
-    title: "Cowork and plugins for finance",
-    subtitle: "New integrations with financial data providers and trading platforms.",
+    title: "Node system architecture deep dive",
+    subtitle: "Lessons learned building a flexible node editor with React Flow and custom handles.",
     date: "Feb 24, 2026",
-    category: "Enterprise AI",
-    readTime: "8 min read",
+    category: "Technical",
+    readTime: "12 min read",
     imageColor: "bg-[#7A8B6E]",
     imagePattern: "stairs"
   },
   {
     id: 3,
-    title: "Cowork and plugins for teams across the enterprise",
-    subtitle: "Deploy Claude across your organization with enterprise-grade security.",
-    date: "Feb 24, 2026",
-    category: "Agents",
-    readTime: "6 min read",
+    title: "Workspace management at scale",
+    subtitle: "New features for organizing projects: collections, tags, and bulk operations.",
+    date: "Feb 18, 2026",
+    category: "Product",
+    readTime: "5 min read",
     imageColor: "bg-[#D4846A]",
     imagePattern: "book"
   },
   {
     id: 4,
-    title: "Introducing Claude 4: Our most capable model yet",
-    subtitle: "Claude 4 brings enhanced reasoning, coding, and creative capabilities.",
-    date: "Feb 15, 2026",
-    category: "Product",
-    readTime: "12 min read",
+    title: "Export to PNG, PDF, and JSON",
+    subtitle: "Rendering canvas to multiple formats using html2canvas and jsPDF.",
+    date: "Feb 12, 2026",
+    category: "Features",
+    readTime: "6 min read",
     imageColor: "bg-[#B8C5C4]",
     imagePattern: "code"
   },
   {
     id: 5,
-    title: "The future of AI-assisted development",
-    subtitle: "How Claude Code is transforming software engineering workflows.",
-    date: "Feb 10, 2026",
-    category: "Engineering",
-    readTime: "10 min read",
+    title: "Designing for spatial thinking",
+    subtitle: "Why we chose an infinite canvas over traditional linear interfaces.",
+    date: "Feb 5, 2026",
+    category: "Design",
+    readTime: "7 min read",
     imageColor: "bg-[#C4A77D]",
     imagePattern: "eye"
   },
   {
     id: 6,
-    title: "Building reliable agent systems at scale",
-    subtitle: "Lessons learned from deploying autonomous agents in production.",
+    title: "Introducing Meshwork Studio 1.0",
+    subtitle: "A complete rebuild with faster rendering, better UX, and enterprise features.",
     date: "Jan 28, 2026",
-    category: "Research",
-    readTime: "15 min read",
-    imageColor: "bg-[#D4846A]",
-    imagePattern: "nodes"
+    category: "Announcements",
+    readTime: "4 min read",
+    imageColor: "bg-[#9B8B7A]",
+    imagePattern: "chart"
   }
 ];
 
 const filters = [
   { label: "Sort by", options: ["Newest", "Oldest", "Popular"] },
-  { label: "Category", options: ["All", "Claude Code", "Enterprise AI", "Agents", "Product", "Research"] },
-  { label: "Product", options: ["All", "Claude", "Claude Code", "API", "Console"] },
+  { label: "Category", options: ["All", "Engineering", "Technical", "Product", "Features", "Design", "Announcements"] },
+  { label: "Product", options: ["All", "Meshwork Studio", "Canvas", "Workspace", "API"] },
 ];
 
 function PatternSvg({ pattern }: { pattern: string }) {
