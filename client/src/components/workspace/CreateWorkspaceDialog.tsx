@@ -20,6 +20,8 @@ const formSchema = insertWorkspaceSchema.pick({
   title: true,
   type: true,
   icon: true,
+}).extend({
+  title: z.string().min(1, "Project name is required").default("Untitled Project"),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -117,7 +119,7 @@ export function CreateWorkspaceDialog({ open, onOpenChange }: CreateWorkspaceDia
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { title: "", type: "system" },
+    defaultValues: { title: "Untitled Project", type: "system" },
   });
 
   const handleClose = () => {
