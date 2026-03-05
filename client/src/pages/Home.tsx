@@ -127,7 +127,15 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col gap-8 pt-2 max-w-6xl mx-auto">
+    <div className="flex flex-col gap-8 pt-12 max-w-6xl mx-auto min-h-[calc(100vh-4rem)]">
+      {/* Decorative curved lines */}
+      <div className="absolute top-20 left-0 w-32 h-32 pointer-events-none opacity-10">
+        <svg viewBox="0 0 100 100" className="w-full h-full stroke-foreground fill-none">
+          <path d="M 10,50 Q 50,10 90,50 T 170,50" strokeWidth="2" />
+          <path d="M 10,60 Q 50,20 90,60" strokeWidth="1" />
+        </svg>
+      </div>
+      
       {/* Header Section */}
       <div className="flex flex-col gap-6 reveal-on-scroll">
         <div className="flex flex-col gap-2">
@@ -164,44 +172,60 @@ export default function Home() {
         )}
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column - Featured/Actions */}
+      {/* Main Content Grid - Adjusted for bigger left column */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 flex-1">
+        {/* Left Column - Featured/Actions - Now takes more space */}
         {!isWorkspacesPage && (
-          <div className="lg:col-span-5 space-y-6 reveal-on-scroll delay-100">
+          <div className="lg:col-span-6 space-y-6 reveal-on-scroll delay-100 relative">
+            {/* Curved decorative line */}
+            <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-64 pointer-events-none hidden lg:block">
+              <svg viewBox="0 0 40 200" className="w-full h-full stroke-foreground fill-none opacity-20">
+                <path d="M 35,0 Q 5,100 35,200" strokeWidth="3" />
+                <path d="M 38,20 Q 15,100 38,180" strokeWidth="1" />
+              </svg>
+            </div>
+            
             {mostRecent ? (
-              <FeaturedCard
-                workspace={mostRecent}
-                onContinue={() => setLocation(`/workspace/${mostRecent.id}`)}
-                onDelete={handleDelete}
-              />
+              <div className="h-full min-h-[400px]">
+                <FeaturedCard
+                  workspace={mostRecent}
+                  onContinue={() => setLocation(`/workspace/${mostRecent.id}`)}
+                  onDelete={handleDelete}
+                />
+              </div>
             ) : (
-              <div className="bg-card border rounded-xl p-8 flex flex-col gap-4 items-center text-center">
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Box className="w-6 h-6 text-primary" />
+              <div className="bg-foreground text-background rounded-2xl p-10 flex flex-col gap-5 items-center text-center justify-center min-h-[400px] relative overflow-hidden">
+                <div className="w-16 h-16 rounded-xl bg-background/20 flex items-center justify-center">
+                  <Box className="w-8 h-8" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-display font-semibold tracking-tight">
+                  <h3 className="text-2xl font-display font-semibold tracking-tight">
                     Start Your First Project
                   </h3>
-                  <p className="text-muted-foreground font-sans text-sm mt-1">
+                  <p className="text-background/70 font-sans text-sm mt-2">
                     Create a workspace to begin architecting
                   </p>
                 </div>
                 <Button 
                   onClick={() => setIsCreateOpen(true)} 
-                  className="accent-btn h-10 px-6 text-sm"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 h-12 px-8 text-sm font-medium rounded-lg"
                 >
                   Create Workspace
                 </Button>
+                
+                {/* Curved accent lines inside card */}
+                <svg className="absolute bottom-0 right-0 w-48 h-32 stroke-background/10 fill-none pointer-events-none" viewBox="0 0 200 130">
+                  <path d="M 0,130 Q 100,50 200,80" strokeWidth="4" />
+                  <path d="M 20,130 Q 110,70 200,100" strokeWidth="2" />
+                </svg>
               </div>
             )}
           </div>
         )}
 
         {/* Right Column - Workspace List */}
-        <div className={cn("space-y-4", isWorkspacesPage ? "lg:col-span-12" : "lg:col-span-7")}>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
+        <div className={cn("space-y-4", isWorkspacesPage ? "lg:col-span-12" : "lg:col-span-6")}>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
             <div className="flex items-center gap-4">
               <h2 className="text-lg font-display font-semibold tracking-tight">
                 {isWorkspacesPage ? "My projects" : "Recent"}
@@ -215,7 +239,7 @@ export default function Home() {
 
             <div className="flex items-center gap-3">
               {/* Search */}
-              <div className="relative w-48">
+              <div className="relative w-44">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <input
                   type="text"
