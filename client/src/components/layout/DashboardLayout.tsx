@@ -158,7 +158,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   );
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex font-sans relative overflow-x-hidden">
+    <div className="min-h-screen bg-background text-foreground flex font-sans relative overflow-hidden">
       <MobileWarning />
       <div className="meshwork-bg-text">MESHWORK STUDIO</div>
 
@@ -175,8 +175,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         "flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out relative z-10",
         isExpanded ? "lg:ml-64" : "lg:ml-20"
       )}>
-        {/* Topbar - Fixed position */}
-        <header className="h-16 px-4 md:px-8 border-b-2 border-border bg-card fixed top-0 right-0 z-20 flex items-center justify-between" style={{ left: isExpanded ? '16rem' : '5rem' }}>
+        {/* Topbar - Fixed at top */}
+        <header className="h-16 px-4 md:px-8 border-b-2 border-border bg-card sticky top-0 z-50 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-4 lg:hidden">
             <Sheet>
               <SheetTrigger asChild>
@@ -200,8 +200,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
         </header>
 
-        {/* Page Content - Add top padding for fixed header */}
-        <main className="flex-1 pt-16 p-6 md:p-12 overflow-y-auto scrollbar-hide">
+        {/* Page Content */}
+        <main className="flex-1 p-6 md:p-12 overflow-y-auto scrollbar-hide">
           <div className="max-w-[1400px] mx-auto space-y-12 relative z-20">
             {children}
           </div>
