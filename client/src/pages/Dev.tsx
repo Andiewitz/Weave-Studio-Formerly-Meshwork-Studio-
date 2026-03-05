@@ -566,7 +566,7 @@ export default function Dev() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] relative pb-24">
+    <div className="min-h-[calc(100vh-4rem)] relative">
       {/* Dev blog background - fixed to cover full viewport */}
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_31px,currentColor_31px,currentColor_32px)] opacity-[0.02]" />
