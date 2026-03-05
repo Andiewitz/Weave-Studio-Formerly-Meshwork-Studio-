@@ -1,21 +1,19 @@
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { useToast } from "@/hooks/use-toast";
-import { FileText, GitBranch, Bug, Lightbulb, Terminal } from "lucide-react";
+import { GitBranch, Bug, Lightbulb, Terminal } from "lucide-react";
 
 export default function DevPage() {
   const { toast } = useToast();
 
   return (
-    <DashboardLayout>
-      <div className="flex flex-col gap-10 pt-4">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground leading-[0.85]">
-            Dev<br />Documentation
-          </h1>
-          <p className="mt-6 text-xl font-bold uppercase tracking-widest border-l-4 border-foreground pl-4 ml-2 max-w-md">
-            System logs, changelog, and technical notes
-          </p>
-        </div>
+    <div className="flex flex-col gap-10 pt-4">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground leading-[0.85]">
+          Dev<br />Documentation
+        </h1>
+        <p className="mt-6 text-xl font-bold uppercase tracking-widest border-l-4 border-foreground pl-4 ml-2 max-w-md">
+          System logs, changelog, and technical notes
+        </p>
+      </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Changelog Section */}
@@ -135,6 +133,6 @@ export default function DevPage() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </div>
   );
 }
