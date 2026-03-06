@@ -120,27 +120,34 @@ function Router() {
     );
   }
 
-  // Dashboard routes with layout - simplified, no glitchy animations
+  // Dashboard routes with layout
   return (
     <DashboardLayout>
       <div className="flex-1">
-        <Switch location={location}>
-          <Route path="/">
-            <ProtectedRoute component={Home} />
-          </Route>
-          <Route path="/workspaces">
-            <ProtectedRoute component={Home} />
-          </Route>
-          <Route path="/settings">
-            <ProtectedRoute component={Settings} />
-          </Route>
-          <Route path="/dev">
-            <ProtectedRoute component={Dev} />
-          </Route>
-          <Route>
-            <NotFound />
-          </Route>
-        </Switch>
+        <motion.div
+          key={location}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.2 }}
+        >
+          <Switch location={location}>
+            <Route path="/">
+              <ProtectedRoute component={Home} />
+            </Route>
+            <Route path="/workspaces">
+              <ProtectedRoute component={Home} />
+            </Route>
+            <Route path="/settings">
+              <ProtectedRoute component={Settings} />
+            </Route>
+            <Route path="/dev">
+              <ProtectedRoute component={Dev} />
+            </Route>
+            <Route>
+              <NotFound />
+            </Route>
+          </Switch>
+        </motion.div>
       </div>
     </DashboardLayout>
   );
