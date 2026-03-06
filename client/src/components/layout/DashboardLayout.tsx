@@ -46,11 +46,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   // Trigger animation when expanding/collapsing navbar
   useEffect(() => {
     if (hasAnimated.current) {
-      setAnimateKey(prev => prev + 1);
+      setAnimateKey((prev) => prev + 1);
     }
   }, [isExpanded]);
 
-
+  // Navigation items
   const navItems = [
     { icon: LayoutDashboard, label: "Home", href: "/" },
     { icon: FolderOpen, label: "Workspaces", href: "/workspaces" },
