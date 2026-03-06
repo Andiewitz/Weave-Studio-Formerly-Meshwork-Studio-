@@ -435,48 +435,56 @@ export default function Dev() {
 
   if (selectedPost) {
     return (
-      <div className="min-h-screen relative">
-        {/* Blog post background */}
-        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-          <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_31px,currentColor_31px,currentColor_32px)] opacity-[0.02]" />
-          <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-gradient-radial from-indigo-500/5 via-transparent to-transparent rounded-full blur-3xl" />
-        </div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key="post"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+          className="min-h-screen relative"
+        >
+          {/* Blog post background */}
+          <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+            <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_31px,currentColor_31px,currentColor_32px)] opacity-[0.02]" />
+            <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-gradient-radial from-indigo-500/5 via-transparent to-transparent rounded-full blur-3xl" />
+          </div>
 
-        <div className="max-w-4xl mx-auto">
-          {/* Back button */}
-          <Button 
-            variant="ghost" 
-            className="mb-8 -ml-4 text-muted-foreground hover:text-foreground"
-            onClick={() => setSelectedPost(null)}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to blog
-          </Button>
+          <div className="max-w-4xl mx-auto">
+            {/* Back button */}
+            <Button 
+              variant="ghost" 
+              className="mb-8 -ml-4 text-muted-foreground hover:text-foreground"
+              onClick={() => setSelectedPost(null)}
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to blog
+            </Button>
 
-          {/* Article header */}
-          <article className="space-y-8">
-            <div className="space-y-4">
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <span className="px-3 py-1 bg-primary/10 text-primary rounded-full font-medium">
-                  {selectedPost.category}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  {selectedPost.date}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
-                  {selectedPost.readTime}
-                </span>
-              </div>
-              
-              <h1 className="text-4xl md:text-5xl font-bold font-display leading-tight">
-                {selectedPost.title}
-              </h1>
-              
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                {selectedPost.subtitle}
-              </p>
+            {/* Article header */}
+            <article className="space-y-8">
+              <div className="space-y-4">
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <span className="px-3 py-1 bg-primary/10 text-primary rounded-full font-medium">
+                    {selectedPost.category}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Calendar className="w-4 h-4" />
+                    {selectedPost.date}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-4 h-4" />
+                    {selectedPost.readTime}
+                  </span>
+                </div>
+                
+                <h1 className="text-4xl md:text-5xl font-bold font-display leading-tight">
+                  {selectedPost.title}
+                </h1>
+                
+                <p className="text-xl text-muted-foreground leading-relaxed">
+                  {selectedPost.subtitle}
+                </p>
 
               {selectedPost.author && (
                 <div className="flex items-center gap-3 pt-4">
@@ -561,18 +569,27 @@ export default function Dev() {
             </div>
           </article>
         </div>
-      </div>
-    );
-  }
+      </motion.div>
+    </AnimatePresence>
+  );
+}
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] relative">
-      {/* Dev blog background - fixed to cover full viewport */}
-      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_31px,currentColor_31px,currentColor_32px)] opacity-[0.02]" />
-        <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-gradient-radial from-indigo-500/5 via-transparent to-transparent rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 left-1/4 w-[300px] h-[300px] bg-gradient-radial from-emerald-500/5 via-transparent to-transparent rounded-full blur-3xl" />
-      </div>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key="list"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+        className="min-h-[calc(100vh-4rem)] relative"
+      >
+        {/* Dev blog background - fixed to cover full viewport */}
+        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+          <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_31px,currentColor_31px,currentColor_32px)] opacity-[0.02]" />
+          <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-gradient-radial from-indigo-500/5 via-transparent to-transparent rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 left-1/4 w-[300px] h-[300px] bg-gradient-radial from-emerald-500/5 via-transparent to-transparent rounded-full blur-3xl" />
+        </div>
 
       {/* Header with search */}
       <div className="mb-8">
@@ -727,6 +744,7 @@ export default function Dev() {
           )}
         </div>
       </div>
-    </div>
+      </motion.div>
+    </AnimatePresence>
   );
 }
