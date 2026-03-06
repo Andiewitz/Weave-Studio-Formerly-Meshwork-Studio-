@@ -28,6 +28,22 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const userApiKeys = pgTable("user_api_keys", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  provider: varchar("provider").notNull(), // 'openai', 'anthropic', 'google'
+  encryptedKey: text("encrypted_key").notNull(), // AES-256-GCM encrypted
+  iv: text("iv").notNull(), // Initialization vector (base64)
+  authTag: text("auth_tag").notNull(), // GCM auth tag (base64)
+  keyHint: varchar("key_hint", { length: 10 }), // Last 4 chars for UI display
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("IDX_user_api_keys_user_id").on(table.userId),
+  index("IDX_user_api_keys_provider").on(table.provider),
+]);
+
 export const collections = pgTable("collections", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
@@ -87,6 +103,7 @@ export const insertWorkspaceSchema = createInsertSchema(workspaces, {
     }),
 }).omit({ id: true, createdAt: true });
 export const insertNodeSchema = createInsertSchema(nodes);
+export const insertUserApiKeySchema = createInsertSchema(userApiKeys).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertEdgeSchema = createInsertSchema(edges);
 
 export type Collection = typeof collections.$inferSelect;
@@ -95,6 +112,8 @@ export type Workspace = typeof workspaces.$inferSelect;
 export type InsertWorkspace = z.infer<typeof insertWorkspaceSchema>;
 export type Node = typeof nodes.$inferSelect;
 export type InsertNode = z.infer<typeof insertNodeSchema>;
+export type UserApiKey = typeof userApiKeys.$inferSelect;
+export type InsertUserApiKey = z.infer<typeof insertUserApiKeySchema>;
 export type Edge = typeof edges.$inferSelect;
 export type InsertEdge = z.infer<typeof insertEdgeSchema>;
 

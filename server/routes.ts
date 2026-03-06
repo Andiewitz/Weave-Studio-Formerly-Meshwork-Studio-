@@ -3,6 +3,7 @@ import type { Server } from "http";
 import { AuthModule } from "./modules/auth";
 import { WorkspaceModule } from "./modules/workspace";
 import { CanvasModule } from "./modules/canvas";
+import { AIModule } from "./modules/ai";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -16,6 +17,9 @@ export async function registerRoutes(
 
   // Initialize Canvas Module (handles nodes and edges)
   CanvasModule.initialize(app);
+
+  // Initialize AI Module (handles BYOK AI service)
+  AIModule.initialize(app);
 
   console.log("[Monolith] All modules initialized");
 
