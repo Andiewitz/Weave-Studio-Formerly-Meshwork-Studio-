@@ -329,7 +329,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 gap-3">
             <AnimatePresence mode="popLayout">
-              {filteredWorkspaces.map((workspace) => (
+              {filteredWorkspaces.map((workspace, index) => (
                 <motion.div
                   key={workspace.id}
                   layout
@@ -341,7 +341,11 @@ export default function Home() {
                     x: deletingIds.has(workspace.id) ? -20 : 0
                   }}
                   exit={{ opacity: 0, scale: 0.9, x: -50 }}
-                  transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+                  transition={{ 
+                    duration: 0.3, 
+                    delay: index * 0.03,
+                    ease: [0.25, 0.1, 0.25, 1] 
+                  }}
                 >
                   <WorkspaceCard
                     workspace={workspace}

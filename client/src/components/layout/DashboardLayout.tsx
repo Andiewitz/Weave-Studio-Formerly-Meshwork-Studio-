@@ -68,7 +68,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
 
         {!isMobile && (
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => setIsExpanded(!isExpanded)}
             className={cn(
               "p-1.5 rounded-lg hover:bg-black/5 transition-all text-black/40 hover:text-black",
@@ -76,34 +78,43 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             )}
           >
             {isExpanded ? <PanelLeftClose className="w-5 h-5" /> : <ChevronRight className="w-4 h-4 text-black" />}
-          </button>
+          </motion.button>
         )}
       </div>
 
       <nav className="flex-1 px-3 mt-2 overflow-y-auto scrollbar-hide">
         <div className="space-y-1">
-          {navItems.map((item) => {
+          {navItems.map((item, index) => {
             const isActive = location === item.href;
             return (
-              <Link key={item.href} href={item.href} className={cn(
-                "flex items-center gap-3 h-10 rounded-lg transition-all duration-200 group relative",
-                (isExpanded || isMobile) ? "px-3" : "justify-center",
-                isActive
-                  ? "bg-foreground text-background font-medium shadow-sm"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              )}>
-                <item.icon className={cn("w-4 h-4 shrink-0", isActive && "text-background")} />
-                {(isExpanded || isMobile) && (
-                  <span className={cn("font-sans text-sm font-medium whitespace-nowrap opacity-100 transition-opacity duration-300", isActive && "text-background")}>
-                    {item.label}
-                  </span>
-                )}
-                {!isExpanded && !isMobile && (
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground font-sans text-xs rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 whitespace-nowrap shadow-md border">
-                    {item.label}
-                  </div>
-                )}
-              </Link>
+              <motion.div
+                key={item.href}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.05, duration: 0.3 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Link href={item.href} className={cn(
+                  "flex items-center gap-3 h-10 rounded-lg transition-all duration-200 group relative",
+                  (isExpanded || isMobile) ? "px-3" : "justify-center",
+                  isActive
+                    ? "bg-foreground text-background font-medium shadow-sm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                )}>
+                  <item.icon className={cn("w-4 h-4 shrink-0", isActive && "text-background")} />
+                  {(isExpanded || isMobile) && (
+                    <span className={cn("font-sans text-sm font-medium whitespace-nowrap opacity-100 transition-opacity duration-300", isActive && "text-background")}>
+                      {item.label}
+                    </span>
+                  )}
+                  {!isExpanded && !isMobile && (
+                    <div className="absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground font-sans text-xs rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 whitespace-nowrap shadow-md border">
+                      {item.label}
+                    </div>
+                  )}
+                </Link>
+              </motion.div>
             );
           })}
         </div>

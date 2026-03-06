@@ -1,5 +1,6 @@
 import { Workspace } from "@shared/schema";
 import { format } from "date-fns";
+import { motion } from "framer-motion";
 import {
   Box,
   MoreHorizontal,
@@ -280,7 +281,10 @@ export function WorkspaceCard({ workspace, onDelete, isSelected, onToggleSelect,
   return (
     <ContextMenu>
       <ContextMenuTrigger>
-        <div 
+        <motion.div
+          whileHover={{ scale: 1.02, y: -2 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
           className={cn(
             "brutal-card cursor-pointer flex items-center justify-between p-4 bg-card transition-all group hover:bg-black/5 relative overflow-hidden",
             isSelected && "bg-primary/10 border-primary",
@@ -390,7 +394,7 @@ export function WorkspaceCard({ workspace, onDelete, isSelected, onToggleSelect,
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-        </div>
+        </motion.div>
       </ContextMenuTrigger>
       <ContextMenuContent className="brutal-card border-2 border-foreground p-1 bg-card min-w-[180px]">
         <ContextMenuItems />
